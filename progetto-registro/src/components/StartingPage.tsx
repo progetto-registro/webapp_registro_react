@@ -1,9 +1,12 @@
-import { Button } from "@mui/material";
+import { Button, Stack } from "@mui/material";
+import { Link } from "react-router";
 
-export default function StartingPage() {
+export function StartingPage() {
 
-  return (
-   <>
-   </>
-  );
+    return (
+        <Stack direction="row" spacing={2}>
+            <Button variant="contained" component={Link} to="/login">Login</Button>
+            <Button variant="contained" component={Link} to="/signup">Registarti</Button>
+        </Stack>
+    );
 }
