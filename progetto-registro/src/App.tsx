@@ -2,10 +2,9 @@
 import { BrowserRouter, Route, Routes } from 'react-router';
 import { StartingPage } from './components/StartingPage';
 import { Home } from './components/Home';
-
-import './App.css'
-import SignUp from './components/SignUp'
-import StartingPage from './components/StartingPage'
+import SignUp from './components/SignUp';
+import Login from './components/Login/Login';
+import './App.css';
 
 function App() {
 
@@ -15,8 +14,8 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<StartingPage/>} />
-        <Route path="/login" element={<StartingPage/>} />
-        <Route path="/signup" element={<StartingPage/>} />
+        <Route path="/login" element={<Login/>} />
+        <Route path="/signup" element={<SignUp/>} />
         <Route path="/home" element={<Home/>} />
         <Route path="/profilo" element={<StartingPage/>} />
         <Route path="/studenti" element={<StartingPage/>} />
