@@ -1,16 +1,18 @@
-import { BrowserRouter, Route, Routes } from 'react-router';
-import { StartingPage } from './components/StartingPage';
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import './App.css'
+import SignUp from './components/SignUp'
+import StartingPage from './components/StartingPage'
 
 function App() {
 
   return (
     <>
       <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<StartingPage/>} />
-      </Routes>
-    </BrowserRouter>
+        <Routes>
+          <Route path="/" element={<StartingPage />} />
+          <Route path="/signup" element={<SignUp />} />
+        </Routes>
+      </BrowserRouter>
     </>
   )
 }
