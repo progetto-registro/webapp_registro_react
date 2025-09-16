@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
@@ -23,6 +24,9 @@ export default function SignUp()
     const [password, setPassword] = useState("");
     const [confermaPassword, setConfermaPassword] = useState("");
     const [date, setDate] = useState("2024-06-07");
+
+    const navigate = useNavigate();
+
     // const handleSubmit = (e: React.FormEvent) => {
    
 
@@ -39,6 +43,12 @@ export default function SignUp()
           gap: 2,
         }}
       >
+        <Box>
+          <Button type="submit" variant="text" color="primary" onClick={() => navigate(-1)}>
+            ← Indietro
+          </Button>
+        </Box>
+
         <Typography variant="h5" textAlign="center">
           Registrazione
         </Typography>
