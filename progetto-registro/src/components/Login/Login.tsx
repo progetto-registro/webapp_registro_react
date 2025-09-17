@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router';
 import { ToastContainer, toast } from 'react-toastify';
 import Button from '@mui/material/Button';
 import './Login.css';
+import { Box, TextField, Typography } from '@mui/material';
 
 export default function Login() {
   const [username, setUsername] = useState<string>('');  
@@ -15,44 +16,48 @@ export default function Login() {
   //};
 
   return (
-    <div>
-      <div className='back-button-container'>
+    <Box>
+      <Box className='back-button-container'>
         <Button 
           variant="text" 
           onClick={() => navigate(-1)} 
         >
           ← Indietro
         </Button>
-      </div>
+      </Box>
 
-      <div className="login-container">
-        <div>
-          <div>
-            <label htmlFor="username">Username</label>
-          </div>
-          <input 
+      <Box className="login-container">
+        <Box>
+          <Box>
+            <label htmlFor="username">
+              <Typography>Username</Typography>
+            </label>
+          </Box>
+          <TextField 
             type="text"
             id="username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             placeholder="Inserisci username..."
             autoComplete="username"
+            required
           />
-        </div>
+        </Box>
 
-        <div>
-          <div>
-            <label htmlFor="password">Password</label>
-          </div>
-          <input 
+        <Box>
+          <Box>
+            <Typography>Password</Typography>
+          </Box>
+          <TextField 
             type="password"
             id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Inserisci password..."
             autoComplete="current-password"
+            required
           />
-        </div>
+        </Box>
 
         <Button 
           variant="contained" 
@@ -63,7 +68,7 @@ export default function Login() {
         </Button>
 
         <ToastContainer />
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 }
