@@ -10,4 +10,4 @@ export type ButtonAppBarProps = {
   menuItems: MenuItem[];
 };
 
-export type Stedente = {};
+
