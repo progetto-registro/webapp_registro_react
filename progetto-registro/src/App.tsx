@@ -13,6 +13,7 @@ import EditCalendarIcon from '@mui/icons-material/EditCalendar';
 import LogoutIcon from '@mui/icons-material/Logout';
 import HomeFilledIcon from '@mui/icons-material/HomeFilled';
 import type { MenuItem } from './types/menu';
+import { Studenti } from './components/Studenti';
 
 function App() {
 
@@ -33,7 +34,7 @@ function App() {
         <Route path="/signup" element={<SignUp/>} />
         <Route path="/home" element={<Home menuItems={menuItems}/>} />
         <Route path="/profilo" element={<Profile menuItems={menuItems}/>} />
-        <Route path="/studenti" element={<StartingPage/>} />
+        <Route path="/studenti" element={<Studenti menuItems={menuItems}/>} />
         <Route path="/registro" element={<StartingPage/>} />
         <Route path="/presenze" element={<StartingPage/>} />
       </Routes>
