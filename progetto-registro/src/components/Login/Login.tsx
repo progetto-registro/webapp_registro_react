@@ -8,7 +8,7 @@ import { Box, TextField, Typography } from '@mui/material';
 export default function Login() {
   const [username, setUsername] = useState<string>('');  
   const [password, setPassword] = useState<string>('');   
-  const notify = () => toast("Login non avvenuto, funzionalità non implementata");
+  const notify = () => toast.error("Login non avvenuto, funzionalità non implementata");
   const navigate = useNavigate();
 
   //const handleLogin = () => {
