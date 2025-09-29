@@ -19,6 +19,8 @@ import { ToastContainer, toast } from "react-toastify";
 
 export default function SignUp()
 {
+    const navigate = useNavigate();
+   
     const [utente, setUtente] = useState<Utente>({
       nome: "",
       cognome: "",
