@@ -13,26 +13,49 @@ export default function Registro({ menuItems }: ButtonAppBarProps) {
 
   // Fetch dati
   useEffect(() => {
-    fetch("/api/lezioni")
-      .then((res) => res.json())
-      .then((data: Lezione[]) => {
-        const rows = data.flatMap((lezione) =>
-          lezione.studenti.map((studente, index) => ({
-            id: Number(`${lezione.id}${index}`),
-            cf: studente.cf,
-            ore: studente.ore,
-            dataLezione: lezione.dataLezione,
-          }))
-        );
-        setPresenze(rows); // aggiorni lo stato che modifica il datagrid
-      });
-  }, []);
+  async function fetchData() {
+    try {
+      const [lezioniRes, studentiRes] = await Promise.all([
+        fetch("/api/lezioni"),
+        fetch("/api/studenti"),
+      ]);
 
-  const columns: GridColDef[] = [
-    { field: "cf", headerName: "Codice Fiscale", width: 150 },
-    { field: "dataLezione", headerName: "Data Lezione", width: 150 },
-    { field: "ore", headerName: "Ore Presenza", type: "number", width: 130 },
-  ];
+      const lezioniData: Lezione[] = await lezioniRes.json();
+      const studentiData: { cf: string; nome: string; cognome: string }[] =
+        await studentiRes.json();
+
+      const rows = lezioniData.flatMap((lezione) =>
+        lezione.studenti.map((studente, index) => {
+          const stud = studentiData.find((s) => s.cf === studente.cf);
+          return {
+            id: `${lezione.id}-${index}`,
+            cf: studente.cf,
+            nome: stud!.nome,
+            cognome: stud!.cognome,
+            dataLezione: lezione.dataLezione,
+            ore: studente.ore,
+          };
+        })
+      );
+
+      setPresenze(rows);
+    } catch (error) {
+      console.error("Errore nel fetch:", error);
+    }
+  }
+
+  fetchData();
+}, []);
+
+
+const columns: GridColDef[] = [
+  { field: "cf", headerName: "Codice Fiscale", width: 150 },
+  { field: "nome", headerName: "Nome", width: 150 },
+  { field: "cognome", headerName: "Cognome", width: 150 },
+  { field: "dataLezione", headerName: "Data Lezione", width: 150 },
+  { field: "ore", headerName: "Ore Presenza", type: "number", width: 130 },
+];
+
 
   return (
     <Box>
@@ -53,7 +76,7 @@ export default function Registro({ menuItems }: ButtonAppBarProps) {
           color="primary"
           aria-label="add"
           sx={{ position: "fixed", bottom: 20, right: 20 }}
-          onClick={() => navigate("/nuovapresenza")}
+          onClick={() => navigate("/nuova-presenza")}
         >
           <AddIcon />
         </Fab>
