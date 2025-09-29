@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import {useNavigate} from "react-router-dom";
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
@@ -91,6 +92,14 @@ export default function SignUp()
     }
 
     return(
+
+        <>
+        <Box className="back-button-container">
+          <Button type="submit" variant="text" color="primary" onClick={() => navigate(-1)}>
+            ← Indietro
+          </Button>
+        </Box>
+        
         <Box
         component="form"
           onSubmit={handleSubmit}
@@ -103,6 +112,8 @@ export default function SignUp()
           gap: 2,
         }}
       >
+
+
         <Typography variant="h5" textAlign="center">
           Registrazione
         </Typography>
@@ -133,6 +144,7 @@ export default function SignUp()
         <RadioGroup
             row
             aria-labelledby="demo-row-radio-buttons-group-label"
+
             name="sesso"
             value={utente.sesso}
             onChange={handleChange} >
@@ -145,6 +157,8 @@ export default function SignUp()
             control={<Radio />}
             label="other"
             />
+
+
         </RadioGroup>
     </FormControl>
 
@@ -192,6 +206,8 @@ export default function SignUp()
         </Button>
         <ToastContainer />
       </Box>
+
+      </>
 
     )
   }
