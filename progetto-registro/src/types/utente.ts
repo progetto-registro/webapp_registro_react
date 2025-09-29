@@ -3,15 +3,15 @@ export type UtenteLogin = {
     cognome: string;
 };
 
-export type Sesso = 'female' | 'male' | 'other';
+
 
 export type Utente = {
     nome: string;
     cognome: string;
-    sesso: Sesso;
+    sesso: 'F' | 'M';
     dataNascita: string; 
-    codiceFiscale: string;
-    email: string;
+    cf: string;
+    mail: string;
     password: string;
     confermaPassword: string;
 };

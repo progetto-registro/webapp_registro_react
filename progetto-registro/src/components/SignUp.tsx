@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
@@ -9,32 +8,92 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import Typography from '@mui/material/Typography';
-import './SignUp.css';
+import type { Utente } from "../types/utente";
+import type { SelectChangeEvent } from "@mui/material/Select";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
 
 
 
 
 export default function SignUp()
 {
-    const [nome, setNome] = useState("");
-    const [cognome, setCognome] = useState("");
-    const [sesso, setSesso] = useState("");
-    const [dataNascita, setDataNascita] = useState("");
-    const [codiceFiscale, setCodiceFiscale] = useState("");
-    const [email,setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [confermaPassword, setConfermaPassword] = useState("");
-    const [date, setDate] = useState("2024-06-07");
+    const [utente, setUtente] = useState<Utente>({
+      nome: "",
+      cognome: "",
+      sesso: "M",
+      dataNascita: "",
+      cf: "",
+      mail: "",
+      password: "",
+      confermaPassword: "",
+    });
 
-    const navigate = useNavigate();
+    const notify ={
 
-    // const handleSubmit = (e: React.FormEvent) => {
-   
+      error: (msg: string) => toast.error(msg),
+      success: (msg: string) => toast.success(msg),
+    };
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      const { name, value } = e.target;
+      setUtente(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+      e.preventDefault();
+      if (utente.password !== utente.confermaPassword) {
+        notify.error("Le password non coincidono!");
+        return;
+      }
+      if(utente.password.length < 8) {
+        notify.error("La password deve essere di almeno 8 caratteri!");
+        return;
+      }
+      if(!utente.mail.includes("@")) {
+        notify.error("Email non valida!");
+        return;
+      }
+      if(!utente.nome || !utente.cognome) {
+        notify.error("Nome e cognome sono obbligatori!");
+        return;
+      }
+      if(!utente.dataNascita || utente.dataNascita > new Date().toISOString().split("T")[0]) {
+        notify.error("Data di nascita non valida!");
+        return;
+      }
+      const formattedDate = utente.dataNascita.split("-").reverse().join("/"); 
+
+      if(utente.cf && utente.cf.length !== 16) {
+        notify.error("Codice fiscale non valido!");
+        return;
+      }
+
+      const payload = {
+        nome: utente.nome,
+        cognome: utente.cognome,
+        sesso: utente.sesso,
+        dataNascita: formattedDate,
+        cf: utente.cf, 
+        mail: utente.mail,
+        password: utente.password,
+        username: utente.nome       
+      };
+
+    
+      try {
+        const response = await axios.put('http://localhost:8080/api/auth/signup', payload);
+        console.log(response);
+        notify.success("Registrazione completata!");
+      } catch (error: any) {
+        console.log(error?.response?.status ?? error);
+      }
+    }
 
     return(
         <Box
         component="form"
-       // onSubmit={handleSubmit}
+          onSubmit={handleSubmit}
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -44,38 +103,42 @@ export default function SignUp()
           gap: 2,
         }}
       >
-        <Box>
-          <Button type="submit" variant="text" color="primary" onClick={() => navigate(-1)}>
-            ← Indietro
-          </Button>
-        </Box>
-
         <Typography variant="h5" textAlign="center">
           Registrazione
         </Typography>
         
         <TextField
           label="Nome"
-          value={nome}
-          //onChange={(e) => setNome(e.target.value)}
+          name="nome"
+          value={utente.nome}
+          onChange={handleChange}
           required
         />
         <TextField
           label="Cognome"
-          value={cognome}
-           // onChange={(e) => setCognome(e.target.value)}
+          name="cognome"
+          value={utente.cognome}
+          onChange={handleChange}
           required
         />
+      <TextField
+            label="Codice Fiscale"
+            name="cf"
+            value={utente.cf}
+            onChange={handleChange}
+      />
 
     <FormControl>
       <FormLabel id="demo-row-radio-buttons-group-label">Gender</FormLabel>
         <RadioGroup
             row
             aria-labelledby="demo-row-radio-buttons-group-label"
-            name="row-radio-buttons-group" >
-            <FormControlLabel value="female" control={<Radio />} label="Female" />
-            <FormControlLabel value="male" control={<Radio />} label="Male" />
-            <FormControlLabel value="other" control={<Radio />} label="Other" />
+            name="sesso"
+            value={utente.sesso}
+            onChange={handleChange} >
+            <FormControlLabel value="F" control={<Radio />} label="Femmina" />
+            <FormControlLabel value="M" control={<Radio />} label="Maschio" />
+            
             <FormControlLabel
             value="disabled"
             disabled
@@ -87,10 +150,11 @@ export default function SignUp()
 
 
     <TextField
-        label="Pick a date"
+        
         type="date"         
-        value={date}
-        //onChange={(e) => setDate(e.target.value)}
+        name="dataNascita"
+        value={utente.dataNascita}
+        onChange={handleChange}
     
         required
       />
@@ -98,24 +162,27 @@ export default function SignUp()
         <TextField
           label="Email"
           type="email"
-          value={email}
-         // onChange={(e) => setEmail(e.target.value)}
+          name="mail"
+          value={utente.mail}
+          onChange={handleChange}
           required
         />
         
         <TextField
           label="Password"
           type="password"
-          value={password}
-          //onChange={(e) => setPassword(e.target.value)}
+          name="password"
+          value={utente.password}
+          onChange={handleChange}
           required
         />
         
         <TextField
           label="Conferma Password"
           type="password"
-          value={confermaPassword}
-         // onChange={(e) => setConfirmPassword(e.target.value)}
+          name="confermaPassword"
+          value={utente.confermaPassword}
+          onChange={handleChange}
           required
         />
   
@@ -123,14 +190,8 @@ export default function SignUp()
         <Button type="submit" variant="contained" color="primary">
           Registrati
         </Button>
+        <ToastContainer />
       </Box>
 
-
-
-
-
     )
-
-
-
-}
+  }
