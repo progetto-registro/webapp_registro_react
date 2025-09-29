@@ -15,6 +15,7 @@ import HomeFilledIcon from '@mui/icons-material/HomeFilled';
 import type { MenuItem } from './types/menu';
 import Registro from './components/Registro';
 import { Studenti } from './components/Studenti';
+import NuovaPresenza from './components/NuovaPresenza/NuovaPresenza';
 
 function App() {
 
@@ -23,7 +24,7 @@ function App() {
   { text: 'Profilo', icon: <AccountBoxIcon fontSize="large" />, path: '/profilo' },
   { text: 'Studenti', icon: <FormatListBulletedAddIcon fontSize="large" />, path: '/studenti' },
   { text: 'Registro', icon: <AppRegistrationIcon fontSize="large" />, path: '/registro' },
-  { text: 'Presenze', icon: <EditCalendarIcon fontSize="large" />, path: '/presenze' },
+  { text: 'Presenze', icon: <EditCalendarIcon fontSize="large" />, path: '/nuova-presenza' },
   { text: 'Logout', icon: <LogoutIcon fontSize="large" />, path: '/' },
   ]
 
@@ -37,7 +38,7 @@ function App() {
         <Route path="/profilo" element={<Profile menuItems={menuItems}/>} />
         <Route path="/registro" element={<Registro menuItems={menuItems}/>} />
         <Route path="/studenti" element={<Studenti menuItems={menuItems}/>} />
-        <Route path="/presenze" element={<StartingPage/>} />
+        <Route path="/nuova-presenza" element={<NuovaPresenza menuItems={menuItems}/>} />
       </Routes>
     </BrowserRouter>
   )
