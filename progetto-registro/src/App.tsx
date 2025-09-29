@@ -14,6 +14,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import HomeFilledIcon from '@mui/icons-material/HomeFilled';
 import type { MenuItem } from './types/menu';
 import Registro from './components/Registro';
+import { Studenti } from './components/Studenti';
 
 function App() {
 
@@ -34,8 +35,8 @@ function App() {
         <Route path="/signup" element={<SignUp/>} />
         <Route path="/home" element={<Home menuItems={menuItems}/>} />
         <Route path="/profilo" element={<Profile menuItems={menuItems}/>} />
-        <Route path="/studenti" element={<StartingPage/>} />
         <Route path="/registro" element={<Registro menuItems={menuItems}/>} />
+        <Route path="/studenti" element={<Studenti menuItems={menuItems}/>} />
         <Route path="/presenze" element={<StartingPage/>} />
       </Routes>
     </BrowserRouter>

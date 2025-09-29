@@ -3,67 +3,107 @@ import { useNavigate } from 'react-router';
 import { ToastContainer, toast } from 'react-toastify';
 import Button from '@mui/material/Button';
 import './Login.css';
+import { Box, TextField, Typography } from '@mui/material';
 
 export default function Login() {
   const [username, setUsername] = useState<string>('');  
   const [password, setPassword] = useState<string>('');   
-  const notify = () => toast("Login non avvenuto, funzionalità non implementata");
   const navigate = useNavigate();
 
-  //const handleLogin = () => {
-    //console.log("Username:", username, "Password:", password);
-  //};
+const submitLogin = async () => {
+  if (!username || !password) {
+    toast.error("Inserisci username e password");
+    return;
+  }
+
+  const toastLoad = toast.loading("Login in corso...");
+
+  try {
+    const response = await fetch("http://localhost:8080/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password }),
+      credentials: "include" // invia cookie al backend
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      toast.update(toastLoad, {
+        render: `Benvenuto ${data.nome}`,
+        type: "success",
+        isLoading: false,
+        autoClose: 3000
+      }); 
+      navigate("/home"); // vai alla home
+    } else {
+      const errorText = await response.text();
+      toast.error(errorText);
+    }
+  } catch (err) {
+    const errorMessage = err instanceof Error ? err.message : "Errore di connessione al server";
+    toast.update(toastLoad, {
+      render: errorMessage,
+      type: "error",
+      isLoading: false,
+      autoClose: 3000
+    });
+  }
+};
 
   return (
-    <div>
-      <div className='back-button-container'>
+    <Box>
+      <Box className='back-button-container'>
         <Button 
           variant="text" 
           onClick={() => navigate(-1)} 
         >
           ← Indietro
         </Button>
-      </div>
+      </Box>
 
-      <div className="login-container">
-        <div>
-          <div>
-            <label htmlFor="username">Username</label>
-          </div>
-          <input 
+      <Box className="login-container">
+        <Box>
+          <Box>
+            <label htmlFor="username">
+              <Typography>Username</Typography>
+            </label>
+          </Box>
+          <TextField 
             type="text"
             id="username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             placeholder="Inserisci username..."
             autoComplete="username"
+            required
           />
-        </div>
+        </Box>
 
-        <div>
-          <div>
-            <label htmlFor="password">Password</label>
-          </div>
-          <input 
+        <Box>
+          <Box>
+            <Typography>Password</Typography>
+          </Box>
+          <TextField 
             type="password"
             id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Inserisci password..."
             autoComplete="current-password"
+            required
           />
-        </div>
+        </Box>
 
         <Button 
           variant="contained" 
-          onClick={notify} 
+          onClick={submitLogin} 
           className="button"
         >
           Login
         </Button>
 
         <ToastContainer />
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 }
