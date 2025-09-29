@@ -34,7 +34,7 @@ const submitLogin = async () => {
         isLoading: false,
         autoClose: 3000
       }); 
-      navigate("/home"); // vai alla home
+      navigate("/home");
     } else {
       const errorText = await response.text();
       toast.error(errorText);
@@ -62,15 +62,13 @@ const submitLogin = async () => {
       </Box>
 
       <Box className="login-container">
+        <Typography variant='h5' textAlign='center' fontWeight="bold">
+          Login
+        </Typography>
+
         <Box>
-          <Box>
-            <label htmlFor="username">
-              <Typography>Username</Typography>
-            </label>
-          </Box>
           <TextField 
-            type="text"
-            id="username"
+            label="Username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             placeholder="Inserisci username..."
@@ -78,18 +76,14 @@ const submitLogin = async () => {
             required
           />
         </Box>
-
+      
         <Box>
-          <Box>
-            <Typography>Password</Typography>
-          </Box>
           <TextField 
             type="password"
-            id="password"
+            label="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Inserisci password..."
-            autoComplete="current-password"
             required
           />
         </Box>
