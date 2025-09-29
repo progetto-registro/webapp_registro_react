@@ -10,10 +10,12 @@
 }
 
 .login-container input,
-.login-container .MuiOutlinedInput-root,
 .login-container button {   
-    color: white;              
-    border: 1px solid white;  
+    color: white;               
+}
+
+.login-container .MuiOutlinedInput-root fieldset {
+    border-color: white;
 }
 
 
