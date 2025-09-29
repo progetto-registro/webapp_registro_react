@@ -11,7 +11,11 @@
 
 .login-container input,
 .login-container button {   
-    color: white;               
+    color: white !important;               
+}
+
+.Muiforlabel-root {
+    color: white !important;
 }
 
 .login-container .MuiOutlinedInput-root fieldset {

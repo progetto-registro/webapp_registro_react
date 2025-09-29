@@ -2,8 +2,9 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { ToastContainer, toast } from 'react-toastify';
 import Button from '@mui/material/Button';
-import './Login.css';
 import { Box, TextField, Typography } from '@mui/material';
+import './Login.css';
+import axios from 'axios';
 
 export default function Login() {
   const [username, setUsername] = useState<string>('');  
@@ -18,37 +19,73 @@ const submitLogin = async () => {
 
   const toastLoad = toast.loading("Login in corso...");
 
-  try {
-    const response = await fetch("http://localhost:8080/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password }),
-      credentials: "include" // invia cookie al backend
-    });
+    try {
+      const response = await axios.post("http://localhost:8080/api/auth/login",
+        { username, password }
+      );
 
-    if (response.ok) {
-      const data = await response.json();
-      toast.update(toastLoad, {
-        render: `Benvenuto ${data.nome}`,
+     toast.update(toastLoad, {
+        render: `Benvenuto ${response.data.nome}`,
         type: "success",
         isLoading: false,
         autoClose: 3000
       }); 
       navigate("/home");
-    } else {
-      const errorText = await response.text();
-      toast.error(errorText);
+
+    }  catch (err: any) {
+      if (err.response) {
+        switch (err.response.status) {
+          case 400:
+            toast.update(toastLoad, {
+              render: "Username o password mancanti (errore 400)",
+              type: "error",
+              isLoading: false,
+              autoClose: 4000
+            });
+            break;
+          case 404:
+            toast.update(toastLoad, {
+              render: "Credenziali errate: controlla username e password (404)",
+              type: "error",
+              isLoading: false,
+              autoClose: 4000
+            });
+            break;
+          case 500:
+            toast.update(toastLoad, {
+              render: "Errore interno del server (500)",
+              type: "error",
+              isLoading: false,
+              autoClose: 4000
+            });
+            break;
+          default:
+            toast.update(toastLoad, {
+              render: `Errore imprevisto (${err.response.status})`,
+              type: "error",
+              isLoading: false,
+              autoClose: 4000
+            });
+        }
+      } else if (err.request) {
+        // nessuna risposta dal server
+        toast.update(toastLoad, {
+          render: "Impossibile connettersi al server. Verifica che sia avviato",
+          type: "error",
+          isLoading: false,
+          autoClose: 4000
+        });
+      } else {
+        // errore generico in axios
+        toast.update(toastLoad, {
+          render: `Errore: ${err.message}`,
+          type: "error",
+          isLoading: false,
+          autoClose: 4000
+        });
+      }
     }
-  } catch (err) {
-    const errorMessage = err instanceof Error ? err.message : "Errore di connessione al server";
-    toast.update(toastLoad, {
-      render: errorMessage,
-      type: "error",
-      isLoading: false,
-      autoClose: 3000
-    });
-  }
-};
+  };
 
   return (
     <Box>
