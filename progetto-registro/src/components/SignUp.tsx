@@ -32,6 +32,14 @@ export default function SignUp()
    
 
     return(
+
+        <>
+        <Box className="back-button-container">
+          <Button type="submit" variant="text" color="primary" onClick={() => navigate(-1)}>
+            ← Indietro
+          </Button>
+        </Box>
+        
         <Box
         component="form"
        // onSubmit={handleSubmit}
@@ -44,11 +52,6 @@ export default function SignUp()
           gap: 2,
         }}
       >
-        <Box>
-          <Button type="submit" variant="text" color="primary" onClick={() => navigate(-1)}>
-            ← Indietro
-          </Button>
-        </Box>
 
         <Typography variant="h5" textAlign="center">
           Registrazione
@@ -76,12 +79,6 @@ export default function SignUp()
             <FormControlLabel value="female" control={<Radio />} label="Female" />
             <FormControlLabel value="male" control={<Radio />} label="Male" />
             <FormControlLabel value="other" control={<Radio />} label="Other" />
-            <FormControlLabel
-            value="disabled"
-            disabled
-            control={<Radio />}
-            label="other"
-            />
         </RadioGroup>
     </FormControl>
 
@@ -124,11 +121,7 @@ export default function SignUp()
           Registrati
         </Button>
       </Box>
-
-
-
-
-
+      </>
     )
 
 
