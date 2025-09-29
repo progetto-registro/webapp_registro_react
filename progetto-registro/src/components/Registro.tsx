@@ -14,6 +14,8 @@ import AddIcon from "@mui/icons-material/Add";
 import { useNavigate } from "react-router-dom";
 import type { Lezione, Presenza } from "../types/presenza";
 import { Button } from "@mui/material";
+import EditIcon from '@mui/icons-material/Edit';
+
 
 export default function Registro({ menuItems }: ButtonAppBarProps) {
   //unisco i tipi Presenza Studente e Lezione
@@ -90,11 +92,11 @@ setPresenze(row);
                     <Button
                       variant="outlined"
                       size="small"
+                      startIcon={<EditIcon />}
                       onClick={() =>
-                        navigate("/nuova-presenza/" + row.cf)
+                        navigate("/nuova-presenza/")
                       }
                     >
-                      Modifica Presenza
                     </Button>
                   </TableCell>
                 </TableRow>
