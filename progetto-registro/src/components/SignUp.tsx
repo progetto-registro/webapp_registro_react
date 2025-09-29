@@ -87,6 +87,9 @@ export default function SignUp()
       try {
         const response = await axios.put('http://localhost:8080/api/auth/signup', payload);
         console.log(response);
+        //const token = response.data.token; 
+        //localStorage.setItem("token", token); 
+        navigate("/home");
         notify.success("Registrazione completata!");
       } catch (error: any) {
         console.log(error?.response?.status ?? error);
