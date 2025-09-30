@@ -24,8 +24,8 @@ export default function Registro({ menuItems }: ButtonAppBarProps) {
     async function fetchData() {
       try {
         const [lezioniRes, studentiRes] = await Promise.all([
-          fetch("/api/lezioni"),
-          fetch("/api/studenti"),
+          fetch("http://localhost:8080/api/lezioni"),
+          fetch("http://localhost:8080/api/studenti"),
         ]);
 
 const lezioniData: Lezione[] = await lezioniRes.json();
