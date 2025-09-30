@@ -12,7 +12,7 @@ import EditCalendarIcon from "@mui/icons-material/EditCalendar";
 import LogoutIcon from "@mui/icons-material/Logout";
 import HomeFilledIcon from "@mui/icons-material/HomeFilled";
 import type { MenuItem } from "./types/menu";
-import Registro from "./components/Registro";
+import Registro from "./components/Registro/Registro";
 import { Studenti } from "./components/Studenti/Studenti";
 import NuovaPresenza from "./components/NuovaPresenza/NuovaPresenza";
 
