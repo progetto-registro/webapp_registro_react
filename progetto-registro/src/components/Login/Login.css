@@ -1,20 +1,5 @@
-/*
-.login-page{
-    min-height: 100vh;           
-    width: 100%;                 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #282c34; 
-    background-size: cover;
-    background-position: center;
-    position: relative;
-    overflow: hidden; 
-} 
-
-*/
 .login-container {
-    background-color: #708993;
+    background-color: white;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -22,7 +7,8 @@
     gap: 15px;
     padding: 20px;
     border: 1px solid #ccc;
-    border-radius: 8px;    
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);    
 }
 
 .login-container input,
@@ -34,20 +20,14 @@
     color: white;
 }
 
-.login-container .MuiOutlinedInput-root fieldset {
-    border-color: white;
-}
-
-.back-button-container {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    margin-top: 10px;
-}
+.login-paper {
+    background-color: transparent !important;
+    box-shadow: none !important;
+}   
 
 .username-field .MuiInputBase-input {
     width: 100%;
-    min-width: 225px;
+    min-width: 230px;
 }
 
 .signup-link button{
