@@ -1,27 +1,46 @@
-import React, { useState, useEffect } from "react";
-import ButtonAppBar from "./ButtonAppBar";
-import Box from "@mui/material/Box";
-import type { ButtonAppBarProps } from "../types/menu";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
-import Fab from "@mui/material/Fab";
-import AddIcon from "@mui/icons-material/Add";
+import { useState, useEffect } from "react";
+import ButtonAppBar from "../ButtonAppBar";
+import type { ButtonAppBarProps } from "../../types/menu";
 import { useNavigate } from "react-router-dom";
-import type { Lezione, Presenza } from "../types/presenza";
-import { Button } from "@mui/material";
+import type { Lezione, PresenzaEstesa } from "../../types/presenza";
+import { 
+  Button, 
+  Box, 
+  Table, 
+  TableBody, 
+  TableCell, 
+  TableContainer, 
+  TableHead, 
+  TableRow, 
+  Paper, 
+  Fab, 
+  IconButton,
+  DialogTitle,
+  Dialog,
+  DialogContent,
+  TextField,
+  DialogActions
+} from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import EditIcon from "@mui/icons-material/Edit";
+import { useCallback } from "react";
+import { toast } from "react-toastify";
+
 
 export default function Registro({ menuItems }: ButtonAppBarProps) {
-  //unisco i tipi Presenza Studente e Lezione
-  const [presenze, setPresenze] = useState<
-    (Presenza & { nome: string; cognome: string; dataLezione: string })[]
-  >([]);
   const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const [presenze, setPresenze] = useState<PresenzaEstesa[]>([]);
+  const [editingPresenza, setEditingPresenza] = useState<PresenzaEstesa | null>(null);
 
+  const [newOre, setNewOre] = useState<number>(0);
+
+  const handleOpenDialog = (presenza: PresenzaEstesa) => {
+    setEditingPresenza(presenza);
+    setNewOre(presenza.ore);
+    setOpen(true);
+  };
+ 
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -53,8 +72,8 @@ export default function Registro({ menuItems }: ButtonAppBarProps) {
 
             return {
               cf: presenzaStudente.cf,
-              nome: datiStudente?.nome,
-              cognome: datiStudente?.cognome,
+              nome: datiStudente!.nome,
+              cognome: datiStudente!.cognome,
               dataLezione: lezione.dataLezione,
               ore: presenzaStudente.ore,
             };
@@ -71,6 +90,41 @@ export default function Registro({ menuItems }: ButtonAppBarProps) {
 
     fetchData();
   }, []);
+
+  const handleUpdateOre = useCallback(async () => {
+    if (!editingPresenza) return;
+
+    try {
+      const response = await fetch("/api/lezioni/modifica", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          cf: editingPresenza.cf,
+          dataLezione: editingPresenza.dataLezione,
+          ore: newOre,
+        }),
+      });
+
+      if (!response.ok) throw new Error("Errore nella modifica");
+
+      // Aggiorna stato locale
+      setPresenze((prev) =>
+        prev.map((p) =>
+          p.cf === editingPresenza.cf && p.dataLezione === editingPresenza.dataLezione
+            ? { ...p, ore: newOre }
+            : p
+        )
+      );
+
+      setOpen(false);
+      setEditingPresenza(null);
+      toast.success("Ore aggiornate con successo!");
+    } catch (error) {
+      console.error(error);
+      toast.error("Impossibile modificare le ore");
+    }
+  }, [editingPresenza, newOre]);
 
   return (
     <Box>
@@ -101,13 +155,12 @@ export default function Registro({ menuItems }: ButtonAppBarProps) {
                   <TableCell align="right">{row.dataLezione}</TableCell>
                   <TableCell align="right">{row.ore}</TableCell>
                   <TableCell align="right">
-                    <Button
-                      variant="outlined"
-                      size="small"
-                      onClick={() => navigate("/nuova-presenza/" + row.cf)}
-                    >
-                      Modifica Presenza
-                    </Button>
+                    <IconButton
+                    color="primary"
+                    onClick={() => handleOpenDialog(row)}
+                  >
+                    <EditIcon />
+                  </IconButton>
                   </TableCell>
                 </TableRow>
               ))}
@@ -115,7 +168,26 @@ export default function Registro({ menuItems }: ButtonAppBarProps) {
           </Table>
         </TableContainer>
       </Box>
-
+      {/* Dialog per modificare ore */}
+      <Dialog open={open} onClose={() => setOpen(false)}>
+        <DialogTitle>Modifica ore</DialogTitle>
+        <DialogContent>
+          <TextField
+            label="Ore di presenza"
+            type="number"
+            fullWidth
+            margin="dense"
+            value={newOre}
+            onChange={(e) => setNewOre(Number(e.target.value))}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpen(false)}>Annulla</Button>
+          <Button onClick={handleUpdateOre} variant="contained" color="primary">
+            Salva
+          </Button>
+        </DialogActions>
+      </Dialog>
       <Fab
         color="primary"
         aria-label="add"
