@@ -1,70 +1,72 @@
-import { useState } from "react";
-import { useNavigate } from "react-router";
-import { ToastContainer, toast } from "react-toastify";
-import Button from "@mui/material/Button";
-import { Box, TextField, Typography } from "@mui/material";
-import "./Login.css";
-import axios from "axios";
+import { useState } from 'react';
+import { useNavigate } from 'react-router';
+import { ToastContainer, toast } from 'react-toastify';
+import Button from '@mui/material/Button';
+import { Box, Link, TextField, Typography } from '@mui/material';
+import './Login.css';
+import axios from 'axios';
 
 export default function Login() {
-  const [username, setUsername] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  const [username, setUsername] = useState<string>('');  
+  const [password, setPassword] = useState<string>('');   
   const navigate = useNavigate();
 
-  const submitLogin = async () => {
-    if (!username || !password) {
-      toast.error("Inserisci username e password");
-      return;
-    }
+const submitLogin = async () => {
+  if (!username || !password) {
+    toast.error("Inserisci username e password");
+    return;
+  }
 
-    const toastLoad = toast.loading("Login in corso...");
+  const toastLoad = toast.loading("Login in corso...");
 
     try {
-      const response = await axios.post("/api/auth/login", {
-        username,
-        password,
-      });
+      const response = await axios.post("http://localhost:8080/api/auth/login",
+        { username, password }
+      );
 
-      toast.update(toastLoad, {
+     toast.update(toastLoad, {
         render: `Benvenuto ${response.data.nome}`,
         type: "success",
         isLoading: false,
-        autoClose: 3000,
-      });
+        autoClose: 3000
+      }); 
       navigate("/home");
-    } catch (err: any) {
+    }  
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    catch (err: any) {
       if (err.response) {
         switch (err.response.status) {
           case 400:
             toast.update(toastLoad, {
-              render: "Username o password mancanti (errore 400)",
+              render: "Username e/o password mancanti. Prova a registrarti se non l'hai ancora fatto",
               type: "error",
               isLoading: false,
-              autoClose: 4000,
+              autoClose: 4000
             });
             break;
           case 404:
             toast.update(toastLoad, {
-              render: "Credenziali errate: controlla username e password (404)",
+              render: (err.response.data),
               type: "error",
               isLoading: false,
-              autoClose: 4000,
+              autoClose: 4000
             });
             break;
           case 500:
             toast.update(toastLoad, {
-              render: "Errore interno del server (500)",
+              render: (err.response.data),
               type: "error",
               isLoading: false,
-              autoClose: 4000,
+              autoClose: 4000
             });
             break;
           default:
             toast.update(toastLoad, {
-              render: `Errore imprevisto (${err.response.status})`,
+              render: `Errore generico (${err.response.status})`,
               type: "error",
               isLoading: false,
-              autoClose: 4000,
+              autoClose: 4000
             });
         }
       } else if (err.request) {
@@ -73,58 +75,75 @@ export default function Login() {
           render: "Impossibile connettersi al server. Verifica che sia avviato",
           type: "error",
           isLoading: false,
-          autoClose: 4000,
+          autoClose: 4000
         });
       } else {
-        // errore generico in axios
+        // errore in axios
         toast.update(toastLoad, {
           render: `Errore: ${err.message}`,
           type: "error",
           isLoading: false,
-          autoClose: 4000,
+          autoClose: 4000
         });
       }
     }
   };
 
   return (
-    <Box>
-      <Box className="back-button-container">
-        <Button variant="text" onClick={() => navigate(-1)}>
+    <Box className="login-page">
+      <Box className='back-button-container'>
+        <Button
+          variant="text" 
+          onClick={() => navigate(-1)} 
+        >
           ← Indietro
         </Button>
       </Box>
 
       <Box className="login-container">
-        <Typography variant="h5" textAlign="center" fontWeight="bold">
-          Login
+        <Typography variant='h5' textAlign='center' fontWeight="bold">
+          Benvenuto
         </Typography>
 
         <Box>
-          <TextField
+          <TextField 
             label="Username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            placeholder="Inserisci username..."
             autoComplete="username"
             required
           />
         </Box>
-
+      
         <Box>
-          <TextField
+          <TextField 
             type="password"
             label="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            placeholder="Inserisci password..."
             required
           />
         </Box>
 
-        <Button variant="contained" onClick={submitLogin} className="button">
+        <Button 
+          variant="contained" 
+          onClick={submitLogin} 
+          className="button"
+        >
           Login
         </Button>
+
+        <Box className="signup-link">
+          Non hai un account?
+          <Link
+          component="button"
+          variant="body2"
+          onClick={() => {
+            navigate("/signup");}}
+          >
+          Registrati
+          </Link>
+        </Box>
 
         <ToastContainer />
       </Box>
