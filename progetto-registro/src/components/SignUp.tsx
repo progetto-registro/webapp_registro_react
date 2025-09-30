@@ -9,8 +9,8 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import Typography from '@mui/material/Typography';
+import PasswordField from "./PasswordField";
 import type { Utente } from "../types/utente";
-import type { SelectChangeEvent } from "@mui/material/Select";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 
@@ -89,9 +89,34 @@ export default function SignUp()
         console.log(response);
         //const token = response.data.token; 
         //localStorage.setItem("token", token); 
-        navigate("/home");
-        notify.success("Registrazione completata!");
+
+        if(response.status === 200)
+        {
+          notify.success("Registrazione avvenuta con successo!");
+          setTimeout(() => {
+            navigate("/login"); 
+          }, 2000);
+          
+
+        }
+        
+        
       } catch (error: any) {
+        if (error.response) {
+          console.log("Status:", error.response.status);
+          console.log("Messaggio di errore dal server:", error.response.data);
+      
+          // La richiesta è stata fatta e il server ha risposto con uno status code
+          //error.response.data contiene il messaggio di errore dal server
+          const errMsg = error.response.data || "Errore generico";
+          notify.error(errMsg);
+        } else if (error.request) {
+          // La richiesta è stata fatta, ma non è arrivata risposta
+          notify.error("Nessuna risposta dal server. Controlla la connessione.");
+        } else {
+          // Errore nell’impostare la richiesta
+          notify.error("Errore interno: " + error.message);
+        }
         console.log(error?.response?.status ?? error);
       }
     }
@@ -186,24 +211,24 @@ export default function SignUp()
           onChange={handleChange}
           required
         />
-        
-        <TextField
-          label="Password"
-          type="password"
-          name="password"
-          value={utente.password}
-          onChange={handleChange}
-          required
+        <PasswordField
+           name="password"
+           label="Password"
+           value={utente.password}
+           onChange={handleChange}
+           required
         />
-        
-        <TextField
-          label="Conferma Password"
-          type="password"
+
+        <PasswordField
           name="confermaPassword"
+          label="Conferma Password"
           value={utente.confermaPassword}
           onChange={handleChange}
           required
         />
+
+        
+        
   
         
         <Button type="submit" variant="contained" color="primary">
