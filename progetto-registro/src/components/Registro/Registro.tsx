@@ -1,208 +1,208 @@
-import { useState, useEffect } from "react";
-import ButtonAppBar from "../ButtonAppBar";
-import type { ButtonAppBarProps } from "../../types/menu";
+import type { MenuItem } from "../../types/menu";
 import { useNavigate } from "react-router-dom";
-import type { Lezione, PresenzaEstesa } from "../../types/presenza";
-import { 
-  Button, 
-  Box, 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableContainer, 
-  TableHead, 
-  TableRow, 
-  Paper, 
-  Fab, 
-  IconButton,
-  DialogTitle,
-  Dialog,
-  DialogContent,
+import { useState, useEffect } from "react";
+import {
+  Container,
+  Typography,
+  Button,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
   TextField,
-  DialogActions
+  Box,
 } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import EditIcon from "@mui/icons-material/Edit";
-import { useCallback } from "react";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs, { Dayjs } from "dayjs";
+import type { Lezione } from "../../types/presenza";
+import type { Studente } from "../../types/studente";
+import ButtonAppBar from "../ButtonAppBar";
 import { toast } from "react-toastify";
 
+type NuovaPresenzaProps = {
+  menuItems: MenuItem[];
+};
 
-export default function Registro({ menuItems }: ButtonAppBarProps) {
+type PresenzaInput = {
+  cf: string;
+  ore: number;
+};
+
+export default function NuovaPresenza({ menuItems }: NuovaPresenzaProps) {
   const navigate = useNavigate();
-  const [open, setOpen] = useState(false);
-  const [presenze, setPresenze] = useState<PresenzaEstesa[]>([]);
-  const [editingPresenza, setEditingPresenza] = useState<PresenzaEstesa | null>(null);
 
-  const [newOre, setNewOre] = useState<number>(0);
+  const [dataSelezionata, setDataSelezionata] = useState<Dayjs>(dayjs());
+  const [studenti, setStudenti] = useState<Studente[]>([]);
+  const [lezioni, setLezioni] = useState<Lezione[]>([]);
+  const [presenze, setPresenze] = useState<Record<string, number>>({});
+  const [loading, setLoading] = useState(true);
 
-  const handleOpenDialog = (presenza: PresenzaEstesa) => {
-    setEditingPresenza(presenza);
-    setNewOre(presenza.ore);
-    setOpen(true);
-  };
- 
+  // fetch studenti
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchStudenti = async () => {
       try {
-        const [lezioniRes, studentiRes] = await Promise.all([
-          fetch("/api/lezioni", {
-            credentials: "include",
-          }),
-          fetch("/api/studenti", {
-            credentials: "include",
-          }),
-        ]);
-
-        if (!lezioniRes.ok) {
-          throw new Error("Errore nel fetch delle lezioni");
-        }
-        if (!studentiRes.ok) {
-          throw new Error("Errore nel fetch degli studenti");
-        }
-
-        const lezioniData: Lezione[] = await lezioniRes.json();
-        const elencoStudenti: { cf: string; nome: string; cognome: string }[] =
-          await studentiRes.json();
-
-        const row = lezioniData.flatMap((lezione) =>
-        lezione.studenti.map((presenzaStudente) => {
-        const datiStudente = elencoStudenti.find(
-        (studenteInfo) => studenteInfo.cf === presenzaStudente.cf
-        );
-
-        return {
-          idLezione: lezione.id, 
-          cf: presenzaStudente.cf,
-          nome: datiStudente!.nome,
-          cognome: datiStudente!.cognome,
-          dataLezione: lezione.dataLezione,
-          ore: presenzaStudente.ore,
-        };
-        })
-        );
-
-
-        setPresenze(row);
-        console.log("presenze caricate : ", row);
-      } catch (error) {
-        console.error("Errore nel fetch:", error);
-        alert("Errore nel caricamento dei dati");
+        const res = await fetch("/api/studenti", {
+          credentials: "include",
+        });
+        if (!res.ok) throw new Error("Errore caricamento studenti");
+        const data: Studente[] = await res.json();
+        setStudenti(data);
+        setLoading(false);
+      } catch (err) {
+        console.error(err);
+        toast.error("Impossibile caricare gli studenti");
+        setLoading(false);
       }
     };
-
-    fetchData();
+    fetchStudenti();
   }, []);
 
-  const handleUpdateOre = useCallback(async () => {
-  if (!editingPresenza) return;
+  // fetch lezioni
+  useEffect(() => {
+    const fetchLezioni = async () => {
+      try {
+        const res = await fetch("/api/lezioni", {
+          credentials: "include",
+        });
+        if (!res.ok) throw new Error("Errore caricamento lezioni");
+        const data: Lezione[] = await res.json();
+        setLezioni(data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchLezioni();
+  }, []);
 
-  try {
-    const response = await fetch("/api/lezioni/modifica", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify({
-        id: editingPresenza.idLezione, // devi avere l'id della lezione
-        dataLezione: editingPresenza.dataLezione,
-        studenti: [
-          {
-            cf: editingPresenza.cf,
-            ore: newOre
-          }
-        ]
-      }),
-    });
-
-    if (!response.ok) throw new Error("Errore nella modifica");
-
-    setPresenze((prev) =>
-      prev.map((p) =>
-        p.cf === editingPresenza.cf && p.dataLezione === editingPresenza.dataLezione
-          ? { ...p, ore: newOre }
-          : p
-      )
+  // quando cambia la data, carico eventuali ore già inserite
+  useEffect(() => {
+    const lezioneEsistente = lezioni.find(
+      (lez) => lez.dataLezione === dataSelezionata.format("YYYY-MM-DD")
     );
+    if (lezioneEsistente) {
+      const iniziali: Record<string, number> = {};
+      lezioneEsistente.studenti.forEach((p) => {
+        iniziali[p.cf] = p.ore;
+      });
+      setPresenze(iniziali);
+    } else {
+      setPresenze({});
+    }
+  }, [dataSelezionata, lezioni]);
 
-    setOpen(false);
-    setEditingPresenza(null);
-    toast.success("Ore aggiornate con successo!");
-  } catch (error) {
-    console.error(error);
-    toast.error("Impossibile modificare le ore");
-  }
-}, [editingPresenza, newOre]);
+  const handleOreChange = (cf: string, value: string) => {
+    setPresenze((prev) => ({
+      ...prev,
+      [cf]: Number(value),
+    }));
+  };
 
+  const handleSalva = async () => {
+    const payload = {
+      dataLezione: dataSelezionata.format("YYYY-MM-DD"),
+      studenti: studenti.map((s) => ({
+        cf: s.cf,
+        ore: presenze[s.cf] || 0,
+      })),
+    };
+
+    try {
+      const res = await fetch("/api/lezioni", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) throw new Error("Errore salvataggio lezione");
+
+      toast.success("Presenze salvate con successo!");
+      navigate("/registro");
+    } catch (err) {
+      console.error(err);
+      toast.error("Errore nel salvataggio");
+    }
+  };
+
+  if (loading) return <Typography>Caricamento...</Typography>;
 
   return (
     <Box>
-      <ButtonAppBar menuItems={menuItems}></ButtonAppBar>
+      <ButtonAppBar menuItems={menuItems} />
 
-      <Box>
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="registro presenze">
-            <TableHead>
-              <TableRow>
-                <TableCell>Codice Fiscale</TableCell>
-                <TableCell align="right">Nome</TableCell>
-                <TableCell align="right">Cognome</TableCell>
-                <TableCell align="right">Data Lezione</TableCell>
-                <TableCell align="right">Ore Presenza</TableCell>
-                <TableCell align="right">Azioni</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {presenze.map((row) => (
-                <TableRow
-                  key={row.cf + "-" + row.dataLezione}
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                >
-                  <TableCell>{row.cf}</TableCell>
-                  <TableCell align="right">{row.nome}</TableCell>
-                  <TableCell align="right">{row.cognome}</TableCell>
-                  <TableCell align="right">{row.dataLezione}</TableCell>
-                  <TableCell align="right">{row.ore}</TableCell>
-                  <TableCell align="right">
-                    <IconButton
-                    color="primary"
-                    onClick={() => handleOpenDialog(row)}
-                  >
-                    <EditIcon />
-                  </IconButton>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Box>
-      {/* Dialog per modificare ore */}
-      <Dialog open={open} onClose={() => setOpen(false)}>
-        <DialogTitle>Modifica ore</DialogTitle>
-        <DialogContent>
-          <TextField
-            label="Ore di presenza"
-            type="number"
-            fullWidth
-            margin="dense"
-            value={newOre}
-            onChange={(e) => setNewOre(Number(e.target.value))}
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <Container maxWidth="lg">
+          <Typography variant="h4" component="h1" gutterBottom>
+            Nuova Presenza
+          </Typography>
+
+          <DatePicker
+            label="Seleziona data"
+            value={dataSelezionata}
+            onChange={(nuovaData) =>
+              setDataSelezionata(nuovaData || dayjs())
+            }
+            sx={{ marginBottom: 2 }}
           />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpen(false)}>Annulla</Button>
-          <Button onClick={handleUpdateOre} variant="contained" color="primary">
-            Salva
-          </Button>
-        </DialogActions>
-      </Dialog>
-      <Fab
-        color="primary"
-        aria-label="add"
-        sx={{ position: "fixed", bottom: 20, right: 20 }}
-        onClick={() => navigate("/nuova-presenza")}
-      >
-        <AddIcon />
-      </Fab>
+
+          <TableContainer component={Paper} sx={{ mt: 3 }}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Nome</TableCell>
+                  <TableCell>Cognome</TableCell>
+                  <TableCell align="center">Ore</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {studenti.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={3} align="center">
+                      Nessuno studente trovato
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  studenti.map((studente) => (
+                    <TableRow key={studente.cf}>
+                      <TableCell>{studente.nome}</TableCell>
+                      <TableCell>{studente.cognome}</TableCell>
+                      <TableCell align="center">
+                        <TextField
+                          type="number"
+                          value={presenze[studente.cf] || ""}
+                          onChange={(e) =>
+                            handleOreChange(studente.cf, e.target.value)
+                          }
+                          inputProps={{ min: 0 }}
+                          size="small"
+                        />
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+
+          <Box sx={{ mt: 3, display: "flex", gap: 2 }}>
+            <Button variant="contained" onClick={handleSalva}>
+              Salva Presenze
+            </Button>
+            <Button
+              variant="outlined"
+              color="secondary"
+              onClick={() => navigate(-1)}
+            >
+              Annulla
+            </Button>
+          </Box>
+        </Container>
+      </LocalizationProvider>
     </Box>
   );
 }
