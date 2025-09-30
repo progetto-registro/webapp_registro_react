@@ -5,6 +5,12 @@
     margin-top: 10px;
 }
 .signup-container {
+    background-color: white;
+    color: black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     gap: 15px;
     padding: 20px;
     border: 1px solid #ccc;
@@ -12,43 +18,12 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
 }
 
-/* 🔹 Testo e placeholder bianchi */
-.MuiInputBase-input {
-  color: white;       /* testo dentro gli input */
+.signup-paper {
+    background-color: transparent !important;
+    box-shadow: none !important;
 }
 
-
-/* 🔹 Label dei campi */
-.MuiInputLabel-root {
-  color: white !important;
+.signup-container input{
+  width: 100% !important;
+  min-width: 250px !important;
 }
-
-/* 🔹 Bordi input */
-.MuiOutlinedInput-root {
-  border-radius: 6px;
-  color: white !important;
-}
-
-/*bordi*/
-.MuiOutlinedInput-root fieldset {
-  border-color: white !important;
-}
-
-.MuiFormLabel-root{
-    color: white !important;
-}
-
-/* 🔹 Radio button e label */
-.MuiFormControlLabel-root {
-  color: white !important;
-}
-
-.MuiRadio-root {
-  color: white !important;
-}
-
-/* 🔹 Date picker icona */
-.MuiSvgIcon-root {
-  color: white !important;
-}
-

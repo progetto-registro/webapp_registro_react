@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import './SignUp.css';
 
 import {useNavigate} from "react-router-dom";
 import Box from '@mui/material/Box';
@@ -142,16 +143,8 @@ export default function SignUp() {
           className="signup-container"
           component="form"
           onSubmit={handleSubmit}
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            width: 300,
-            margin: "auto",
-            mt: 5,
-            gap: 2,
-          }}
         >
-          <Typography variant="h5" textAlign="center">
+          <Typography variant="h4" textAlign="center">
             Registrazione
           </Typography>
 
@@ -188,12 +181,6 @@ export default function SignUp() {
               <FormControlLabel value="F" control={<Radio />} label="Femmina" />
               <FormControlLabel value="M" control={<Radio />} label="Maschio" />
 
-              <FormControlLabel
-                value="disabled"
-                disabled
-                control={<Radio />}
-                label="other"
-              />
             </RadioGroup>
           </FormControl>
 
