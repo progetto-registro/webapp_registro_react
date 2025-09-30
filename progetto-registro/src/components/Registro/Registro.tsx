@@ -201,6 +201,7 @@ export default function Registro({ menuItems }: ButtonAppBarProps) {
             margin="dense"
             value={newOre}
             onChange={(e) => setNewOre(Number(e.target.value))}
+            inputProps={{ min: 0 }}
           />
         </DialogContent>
         <DialogActions>
