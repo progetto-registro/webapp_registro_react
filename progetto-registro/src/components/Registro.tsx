@@ -20,43 +20,56 @@ export default function Registro({ menuItems }: ButtonAppBarProps) {
   const [presenze, setPresenze] = useState<(Presenza & { nome: string; cognome: string; dataLezione: string })[]>([]);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const [lezioniRes, studentiRes] = await Promise.all([
-          fetch("http://localhost:8080/api/lezioni"),
-          fetch("http://localhost:8080/api/studenti"),
-        ]);
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const [lezioniRes, studentiRes] = await Promise.all([
+        fetch("/api/lezioni", {
+          credentials: "include",
+        }),
+        fetch("/api/studenti", {
+          credentials: "include",
+        }),
+      ]);
 
-const lezioniData: Lezione[] = await lezioniRes.json();
-const elencoStudenti: { cf: string; nome: string; cognome: string }[] =
-  await studentiRes.json();
-
-const row = lezioniData.flatMap((lezione) =>
-  lezione.studenti.map((presenzaStudente) => {
-    const datiStudente = elencoStudenti.find(
-      (studenteInfo) => studenteInfo.cf === presenzaStudente.cf
-    );
-
-    return {
-      cf: presenzaStudente.cf,
-      nome: datiStudente?.nome ?? "N/D",
-      cognome: datiStudente?.cognome ?? "N/D",
-      dataLezione: lezione.dataLezione,
-      ore: presenzaStudente.ore,
-    };
-  })
-);
-
-setPresenze(row);
-
-      } catch (error) {
-        console.error("Errore nel fetch:", error);
+      if (!lezioniRes.ok) {
+        throw new Error("Errore nel fetch delle lezioni");
       }
-    }
+      if (!studentiRes.ok) {
+        throw new Error("Errore nel fetch degli studenti");
+      }
 
-    fetchData();
-  }, []);
+      const lezioniData: Lezione[] = await lezioniRes.json();
+      const elencoStudenti: { cf: string; nome: string; cognome: string }[] =
+        await studentiRes.json();
+
+      const row = lezioniData.flatMap((lezione) =>
+        lezione.studenti.map((presenzaStudente) => {
+          const datiStudente = elencoStudenti.find(
+            (studenteInfo) => studenteInfo.cf === presenzaStudente.cf
+          );
+
+          return {
+            cf: presenzaStudente.cf,
+            nome: datiStudente?.nome,
+            cognome: datiStudente?.cognome,
+            dataLezione: lezione.dataLezione,
+            ore: presenzaStudente.ore,
+          };
+        })
+      );
+
+      setPresenze(row);
+      console.log("presenze caricate : ", row);
+    } catch (error) {
+      console.error("Errore nel fetch:", error);
+      alert("Errore nel caricamento dei dati");
+    }
+  };
+
+  fetchData();
+}, []);
+
 
   return (
     <Box>
