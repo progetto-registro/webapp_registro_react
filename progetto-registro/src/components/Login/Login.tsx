@@ -1,38 +1,38 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router';
-import { ToastContainer, toast } from 'react-toastify';
-import Button from '@mui/material/Button';
-import { Box, TextField, Typography } from '@mui/material';
-import './Login.css';
-import axios from 'axios';
+import { useState } from "react";
+import { useNavigate } from "react-router";
+import { ToastContainer, toast } from "react-toastify";
+import Button from "@mui/material/Button";
+import { Box, TextField, Typography } from "@mui/material";
+import "./Login.css";
+import axios from "axios";
 
 export default function Login() {
-  const [username, setUsername] = useState<string>('');  
-  const [password, setPassword] = useState<string>('');   
+  const [username, setUsername] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const navigate = useNavigate();
 
-const submitLogin = async () => {
-  if (!username || !password) {
-    toast.error("Inserisci username e password");
-    return;
-  }
+  const submitLogin = async () => {
+    if (!username || !password) {
+      toast.error("Inserisci username e password");
+      return;
+    }
 
-  const toastLoad = toast.loading("Login in corso...");
+    const toastLoad = toast.loading("Login in corso...");
 
     try {
-      const response = await axios.post("http://localhost:8080/api/auth/login",
-        { username, password }
-      );
+      const response = await axios.post("/api/auth/login", {
+        username,
+        password,
+      });
 
-     toast.update(toastLoad, {
+      toast.update(toastLoad, {
         render: `Benvenuto ${response.data.nome}`,
         type: "success",
         isLoading: false,
-        autoClose: 3000
-      }); 
+        autoClose: 3000,
+      });
       navigate("/home");
-
-    }  catch (err: any) {
+    } catch (err: any) {
       if (err.response) {
         switch (err.response.status) {
           case 400:
@@ -40,7 +40,7 @@ const submitLogin = async () => {
               render: "Username o password mancanti (errore 400)",
               type: "error",
               isLoading: false,
-              autoClose: 4000
+              autoClose: 4000,
             });
             break;
           case 404:
@@ -48,7 +48,7 @@ const submitLogin = async () => {
               render: "Credenziali errate: controlla username e password (404)",
               type: "error",
               isLoading: false,
-              autoClose: 4000
+              autoClose: 4000,
             });
             break;
           case 500:
@@ -56,7 +56,7 @@ const submitLogin = async () => {
               render: "Errore interno del server (500)",
               type: "error",
               isLoading: false,
-              autoClose: 4000
+              autoClose: 4000,
             });
             break;
           default:
@@ -64,7 +64,7 @@ const submitLogin = async () => {
               render: `Errore imprevisto (${err.response.status})`,
               type: "error",
               isLoading: false,
-              autoClose: 4000
+              autoClose: 4000,
             });
         }
       } else if (err.request) {
@@ -73,7 +73,7 @@ const submitLogin = async () => {
           render: "Impossibile connettersi al server. Verifica che sia avviato",
           type: "error",
           isLoading: false,
-          autoClose: 4000
+          autoClose: 4000,
         });
       } else {
         // errore generico in axios
@@ -81,7 +81,7 @@ const submitLogin = async () => {
           render: `Errore: ${err.message}`,
           type: "error",
           isLoading: false,
-          autoClose: 4000
+          autoClose: 4000,
         });
       }
     }
@@ -89,22 +89,19 @@ const submitLogin = async () => {
 
   return (
     <Box>
-      <Box className='back-button-container'>
-        <Button 
-          variant="text" 
-          onClick={() => navigate(-1)} 
-        >
+      <Box className="back-button-container">
+        <Button variant="text" onClick={() => navigate(-1)}>
           ← Indietro
         </Button>
       </Box>
 
       <Box className="login-container">
-        <Typography variant='h5' textAlign='center' fontWeight="bold">
+        <Typography variant="h5" textAlign="center" fontWeight="bold">
           Login
         </Typography>
 
         <Box>
-          <TextField 
+          <TextField
             label="Username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
@@ -113,9 +110,9 @@ const submitLogin = async () => {
             required
           />
         </Box>
-      
+
         <Box>
-          <TextField 
+          <TextField
             type="password"
             label="Password"
             value={password}
@@ -125,11 +122,7 @@ const submitLogin = async () => {
           />
         </Box>
 
-        <Button 
-          variant="contained" 
-          onClick={submitLogin} 
-          className="button"
-        >
+        <Button variant="contained" onClick={submitLogin} className="button">
           Login
         </Button>
 
