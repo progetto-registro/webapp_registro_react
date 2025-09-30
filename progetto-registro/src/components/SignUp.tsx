@@ -89,7 +89,7 @@ export default function SignUp() {
 
     
       try {
-        const response = await axios.put('http://localhost:8080/api/auth/signup', payload);
+        const response = await axios.put('/api/auth/signup', payload);
         console.log(response);
         //const token = response.data.token; 
         //localStorage.setItem("token", token); 
