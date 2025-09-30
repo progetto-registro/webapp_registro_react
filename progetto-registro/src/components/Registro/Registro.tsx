@@ -24,7 +24,7 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import { useCallback } from "react";
-import { toast } from "react-toastify";
+import { ToastContainer, toast } from 'react-toastify';
 
 
 export default function Registro({ menuItems }: ButtonAppBarProps) {
@@ -34,6 +34,11 @@ export default function Registro({ menuItems }: ButtonAppBarProps) {
   const [editingPresenza, setEditingPresenza] = useState<PresenzaEstesa | null>(null);
 
   const [newOre, setNewOre] = useState<number>(0);
+
+  const notify = {
+  error: (msg: string) => toast.error(msg),
+  success: (msg: string) => toast.success(msg),
+  };
 
   const handleOpenDialog = (presenza: PresenzaEstesa) => {
     setEditingPresenza(presenza);
@@ -96,13 +101,19 @@ export default function Registro({ menuItems }: ButtonAppBarProps) {
   const handleUpdateOre = useCallback(async () => {
   if (!editingPresenza) return;
 
+  //controllo 
+  if(!Number.isInteger(newOre) || newOre <= 0 || newOre > 8) {
+    notify.error("Non valido");
+    return;
+  }
+
   try {
     const response = await fetch("/api/lezioni/modifica", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
       body: JSON.stringify({
-        id: editingPresenza.idLezione, // devi avere l'id della lezione
+        id: editingPresenza.idLezione, // devo avere l'id della lezione anche se non l'ho mai considerato
         dataLezione: editingPresenza.dataLezione,
         studenti: [
           {
@@ -125,10 +136,12 @@ export default function Registro({ menuItems }: ButtonAppBarProps) {
 
     setOpen(false);
     setEditingPresenza(null);
-    toast.success("Ore aggiornate con successo!");
+
+    notify.success("Ore aggiornate con successo!");
+    alert("Ore modificate!");
   } catch (error) {
     console.error(error);
-    toast.error("Impossibile modificare le ore");
+    notify.error("Impossibile modificare le ore");
   }
 }, [editingPresenza, newOre]);
 
@@ -174,6 +187,8 @@ export default function Registro({ menuItems }: ButtonAppBarProps) {
             </TableBody>
           </Table>
         </TableContainer>
+
+        
       </Box>
       {/* Dialog per modificare ore */}
       <Dialog open={open} onClose={() => setOpen(false)}>
@@ -190,7 +205,7 @@ export default function Registro({ menuItems }: ButtonAppBarProps) {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpen(false)}>Annulla</Button>
-          <Button onClick={handleUpdateOre} variant="contained" color="primary">
+          <Button onClick={handleUpdateOre} variant="contained" color="primary" disabled={!Number.isInteger(newOre) || newOre <= 0 || newOre >8}>
             Salva
           </Button>
         </DialogActions>
@@ -203,6 +218,10 @@ export default function Registro({ menuItems }: ButtonAppBarProps) {
       >
         <AddIcon />
       </Fab>
+      
+
+    <ToastContainer></ToastContainer>
     </Box>
+    
   );
 }
