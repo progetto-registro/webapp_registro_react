@@ -5,6 +5,8 @@ import Button from '@mui/material/Button';
 import { Box, Link, TextField, Typography } from '@mui/material';
 import './Login.css';
 import axios from 'axios';
+import PasswordField from '../PasswordField';
+
 
 export default function Login() {
   const [username, setUsername] = useState<string>('');  
@@ -20,7 +22,7 @@ const submitLogin = async () => {
   const toastLoad = toast.loading("Login in corso...");
 
     try {
-      const response = await axios.post("http://localhost:8080/api/auth/login",
+      const response = await axios.post("/api/auth/login",
         { username, password }
       );
 
@@ -101,13 +103,14 @@ const submitLogin = async () => {
       </Box>
 
       <Box className="login-container">
-        <Typography variant='h5' textAlign='center' fontWeight="bold">
+        <Typography variant='h4' textAlign='center' fontWeight="bold">
           Benvenuto
         </Typography>
 
-        <Box>
+        <Box className="username-field">
           <TextField 
             label="Username"
+            placeholder='Username'
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             autoComplete="username"
@@ -116,8 +119,8 @@ const submitLogin = async () => {
         </Box>
       
         <Box>
-          <TextField 
-            type="password"
+          <PasswordField 
+            name="password"
             label="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
