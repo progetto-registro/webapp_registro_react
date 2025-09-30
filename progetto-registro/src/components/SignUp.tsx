@@ -1,18 +1,21 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
-import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import FormControl from "@mui/material/FormControl";
-import FormLabel from "@mui/material/FormLabel";
-import Typography from "@mui/material/Typography";
+import './SignUp.css';
+
+import {useNavigate} from "react-router-dom";
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
+import Typography from '@mui/material/Typography';
+import PasswordField from "./PasswordField";
 import type { Utente } from "../types/utente";
-import type { SelectChangeEvent } from "@mui/material/Select";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
+import { Paper } from "@mui/material";
 
 export default function SignUp() {
   const navigate = useNavigate();
@@ -67,32 +70,59 @@ export default function SignUp() {
     }
     const formattedDate = utente.dataNascita.split("-").reverse().join("/");
 
-    if (utente.cf && utente.cf.length !== 16) {
-      notify.error("Codice fiscale non valido!");
-      return;
-    }
 
-    const payload = {
-      nome: utente.nome,
-      cognome: utente.cognome,
-      sesso: utente.sesso,
-      dataNascita: formattedDate,
-      cf: utente.cf,
-      mail: utente.mail,
-      password: utente.password,
-      username: utente.nome,
-    };
 
-    try {
-      const response = await axios.put("/api/auth/signup", payload);
-      console.log(response);
-      //const token = response.data.token;
-      //localStorage.setItem("token", token);
-      navigate("/home");
-      notify.success("Registrazione completata!");
-    } catch (error: any) {
-      console.log(error?.response?.status ?? error);
-    }
+      if(utente.cf && utente.cf.length !== 16) {
+        notify.error("Codice fiscale non valido!");
+        return;
+      }
+    
+
+      const payload = {
+        nome: utente.nome,
+        cognome: utente.cognome,
+        sesso: utente.sesso,
+        dataNascita: formattedDate,
+        cf: utente.cf, 
+        mail: utente.mail,
+        password: utente.password,
+        username: utente.nome       
+      };
+
+    
+      try {
+        const response = await axios.put('/api/auth/signup', payload);
+        console.log(response);
+        //const token = response.data.token; 
+        //localStorage.setItem("token", token); 
+
+        if(response.status === 200)
+        {
+          notify.success("Registrazione avvenuta con successo!");
+          setTimeout(() => {
+            navigate("/login"); 
+          }, 2000);
+          
+        }
+      } 
+      catch (error: any) {
+          if (error.response) {
+            console.log("Status:", error.response.status);
+            console.log("Messaggio di errore dal server:", error.response.data);
+        
+            // La richiesta è stata fatta e il server ha risposto con uno status code
+            //error.response.data contiene il messaggio di errore dal server
+            const errMsg = error.response.data || "Errore generico";
+            notify.error(errMsg);
+          } else if (error.request) {
+            // La richiesta è stata fatta, ma non è arrivata risposta
+            notify.error("Nessuna risposta dal server. Controlla la connessione.");
+          } else {
+            // Errore nell’impostare la richiesta
+            notify.error("Errore interno: " + error.message);
+          }
+          console.log(error?.response?.status ?? error);
+        }
   };
 
   return (
@@ -108,104 +138,93 @@ export default function SignUp() {
         </Button>
       </Box>
 
-      <Box
-        component="form"
-        onSubmit={handleSubmit}
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          width: 300,
-          margin: "auto",
-          mt: 5,
-          gap: 2,
-        }}
-      >
-        <Typography variant="h5" textAlign="center">
-          Registrazione
-        </Typography>
+      <Paper elevation={3} className="signup-paper">
+        <Box 
+          className="signup-container"
+          component="form"
+          onSubmit={handleSubmit}
+        >
+          <Typography variant="h4" textAlign="center">
+            Registrazione
+          </Typography>
 
-        <TextField
-          label="Nome"
-          name="nome"
-          value={utente.nome}
-          onChange={handleChange}
-          required
-        />
-        <TextField
-          label="Cognome"
-          name="cognome"
-          value={utente.cognome}
-          onChange={handleChange}
-          required
-        />
-        <TextField
-          label="Codice Fiscale"
-          name="cf"
-          value={utente.cf}
-          onChange={handleChange}
-        />
-
-        <FormControl>
-          <FormLabel id="demo-row-radio-buttons-group-label">Gender</FormLabel>
-          <RadioGroup
-            row
-            aria-labelledby="demo-row-radio-buttons-group-label"
-            name="sesso"
-            value={utente.sesso}
+          <TextField
+            label="Nome"
+            name="nome"
+            value={utente.nome}
             onChange={handleChange}
-          >
-            <FormControlLabel value="F" control={<Radio />} label="Femmina" />
-            <FormControlLabel value="M" control={<Radio />} label="Maschio" />
+            required
+          />
+          <TextField
+            label="Cognome"
+            name="cognome"
+            value={utente.cognome}
+            onChange={handleChange}
+            required
+          />
+          <TextField
+            label="Codice Fiscale"
+            name="cf"
+            value={utente.cf}
+            onChange={handleChange}
+          />
 
-            <FormControlLabel
-              value="disabled"
-              disabled
-              control={<Radio />}
-              label="other"
-            />
-          </RadioGroup>
-        </FormControl>
+          <FormControl>
+            <FormLabel id="demo-row-radio-buttons-group-label">Gender</FormLabel>
+            <RadioGroup
+              row
+              aria-labelledby="demo-row-radio-buttons-group-label"
+              name="sesso"
+              value={utente.sesso}
+              onChange={handleChange}
+            >
+              <FormControlLabel value="F" control={<Radio />} label="Femmina" />
+              <FormControlLabel value="M" control={<Radio />} label="Maschio" />
 
-        <TextField
-          type="date"
-          name="dataNascita"
-          value={utente.dataNascita}
-          onChange={handleChange}
-          required
-        />
+            </RadioGroup>
+          </FormControl>
 
-        <TextField
-          label="Email"
-          type="email"
-          name="mail"
-          value={utente.mail}
-          onChange={handleChange}
-          required
-        />
+          <TextField
+            type="date"
+            name="dataNascita"
+            value={utente.dataNascita}
+            onChange={handleChange}
+            required
+          />
 
-        <TextField
-          label="Password"
-          type="password"
-          name="password"
-          value={utente.password}
-          onChange={handleChange}
-          required
-        />
+          <TextField
+            label="Email"
+            type="email"
+            name="mail"
+            value={utente.mail}
+            onChange={handleChange}
+            required
+          />
 
-        <TextField
-          label="Conferma Password"
-          type="password"
-          name="confermaPassword"
-          value={utente.confermaPassword}
-          onChange={handleChange}
-          required
-        />
+          <PasswordField
+            name="password"
+            label="Password"
+            value={utente.password}
+            onChange={handleChange}
+            required
+          />
 
-        <Button type="submit" variant="contained" color="primary">
-          Registrati
-        </Button>
-        <ToastContainer />
-      </Box>
+          <PasswordField
+            name="confermaPassword"
+            label="Conferma Password"
+            value={utente.confermaPassword}
+            onChange={handleChange}
+            required
+          />
+
+
+          <Button type="submit" variant="contained" color="primary">
+            Registrati
+          </Button>
+          <ToastContainer />
+        </Box>
+      </Paper>
     </>
   );
 }
+    
