@@ -1,4 +1,5 @@
 .login-container {
+    background-color: white;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -6,29 +7,30 @@
     gap: 15px;
     padding: 20px;
     border: 1px solid #ccc;
-    border-radius: 8px;    
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);    
 }
 
 .login-container input,
 .login-container button {   
-    color: white !important;               
+    color: white;               
 }
 
 .Muiforlabel-root {
-    color: white !important;
+    color: white;
 }
 
-.login-container .MuiOutlinedInput-root fieldset {
-    border-color: white;
-}
+.login-paper {
+    background-color: transparent !important;
+    box-shadow: none !important;
+}   
 
-.back-button-container {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    margin-top: 10px;
+.username-field .MuiInputBase-input {
+    width: 100%;
+    min-width: 230px;
 }
 
 .signup-link button{
     color: cornflowerblue !important;
+    margin-left: 5px;
 }

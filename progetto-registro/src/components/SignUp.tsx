@@ -14,6 +14,7 @@ import PasswordField from "./PasswordField";
 import type { Utente } from "../types/utente";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
+import { Paper } from "@mui/material";
 
 export default function SignUp() {
   const navigate = useNavigate();
@@ -136,103 +137,106 @@ export default function SignUp() {
         </Button>
       </Box>
 
-      <Box
-        component="form"
-        onSubmit={handleSubmit}
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          width: 300,
-          margin: "auto",
-          mt: 5,
-          gap: 2,
-        }}
-      >
-        <Typography variant="h5" textAlign="center">
-          Registrazione
-        </Typography>
+      <Paper elevation={3} className="signup-paper">
+        <Box 
+          className="signup-container"
+          component="form"
+          onSubmit={handleSubmit}
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            width: 300,
+            margin: "auto",
+            mt: 5,
+            gap: 2,
+          }}
+        >
+          <Typography variant="h5" textAlign="center">
+            Registrazione
+          </Typography>
 
-        <TextField
-          label="Nome"
-          name="nome"
-          value={utente.nome}
-          onChange={handleChange}
-          required
-        />
-        <TextField
-          label="Cognome"
-          name="cognome"
-          value={utente.cognome}
-          onChange={handleChange}
-          required
-        />
-        <TextField
-          label="Codice Fiscale"
-          name="cf"
-          value={utente.cf}
-          onChange={handleChange}
-        />
-
-        <FormControl>
-          <FormLabel id="demo-row-radio-buttons-group-label">Gender</FormLabel>
-          <RadioGroup
-            row
-            aria-labelledby="demo-row-radio-buttons-group-label"
-            name="sesso"
-            value={utente.sesso}
+          <TextField
+            label="Nome"
+            name="nome"
+            value={utente.nome}
             onChange={handleChange}
-          >
-            <FormControlLabel value="F" control={<Radio />} label="Femmina" />
-            <FormControlLabel value="M" control={<Radio />} label="Maschio" />
+            required
+          />
+          <TextField
+            label="Cognome"
+            name="cognome"
+            value={utente.cognome}
+            onChange={handleChange}
+            required
+          />
+          <TextField
+            label="Codice Fiscale"
+            name="cf"
+            value={utente.cf}
+            onChange={handleChange}
+          />
 
-            <FormControlLabel
-              value="disabled"
-              disabled
-              control={<Radio />}
-              label="other"
-            />
-          </RadioGroup>
-        </FormControl>
+          <FormControl>
+            <FormLabel id="demo-row-radio-buttons-group-label">Gender</FormLabel>
+            <RadioGroup
+              row
+              aria-labelledby="demo-row-radio-buttons-group-label"
+              name="sesso"
+              value={utente.sesso}
+              onChange={handleChange}
+            >
+              <FormControlLabel value="F" control={<Radio />} label="Femmina" />
+              <FormControlLabel value="M" control={<Radio />} label="Maschio" />
 
-        <TextField
-          type="date"
-          name="dataNascita"
-          value={utente.dataNascita}
-          onChange={handleChange}
-          required
-        />
+              <FormControlLabel
+                value="disabled"
+                disabled
+                control={<Radio />}
+                label="other"
+              />
+            </RadioGroup>
+          </FormControl>
 
-        <TextField
-          label="Email"
-          type="email"
-          name="mail"
-          value={utente.mail}
-          onChange={handleChange}
-          required
-        />
+          <TextField
+            type="date"
+            name="dataNascita"
+            value={utente.dataNascita}
+            onChange={handleChange}
+            required
+          />
 
-        <PasswordField
-           name="password"
-           label="Password"
-           value={utente.password}
-           onChange={handleChange}
-           required
-        />
+          <TextField
+            label="Email"
+            type="email"
+            name="mail"
+            value={utente.mail}
+            onChange={handleChange}
+            required
+          />
 
-        <PasswordField
-          name="confermaPassword"
-          label="Conferma Password"
-          value={utente.confermaPassword}
-          onChange={handleChange}
-          required
-        />
+          <PasswordField
+            name="password"
+            label="Password"
+            value={utente.password}
+            onChange={handleChange}
+            required
+          />
+
+          <PasswordField
+            name="confermaPassword"
+            label="Conferma Password"
+            value={utente.confermaPassword}
+            onChange={handleChange}
+            required
+          />
 
 
-        <Button type="submit" variant="contained" color="primary">
-          Registrati
-        </Button>
-        <ToastContainer />
-      </Box>
+          <Button type="submit" variant="contained" color="primary">
+            Registrati
+          </Button>
+          <ToastContainer />
+        </Box>
+      </Paper>
     </>
   );
 }
