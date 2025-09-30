@@ -11,11 +11,6 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);    
 }
 
-.login-container input,
-.login-container button {   
-    color: white;               
-}
-
 .Muiforlabel-root {
     color: white;
 }
@@ -26,8 +21,12 @@
 }   
 
 .username-field .MuiInputBase-input {
-    width: 100%;
-    min-width: 230px;
+    width: 100% !important;
+    min-width: 230px !important;
+}
+
+.login-container button{
+    width: 100% !important;
 }
 
 .signup-link button{
