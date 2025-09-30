@@ -25,6 +25,10 @@
     min-width: 230px !important;
 }
 
+.login-container button{
+    width: 100% !important;
+}
+
 .signup-link button{
     color: cornflowerblue !important;
     margin-left: 5px;

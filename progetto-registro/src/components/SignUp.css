@@ -24,6 +24,20 @@
 }
 
 .signup-container input{
-  width: 100% !important;
-  min-width: 250px !important;
+    width: 100% !important;
+    min-width: 250px !important;
 }
+
+.signup-container button{
+    width: 100% !important;
+}
+/*
+.css-16wblaj-MuiInputBase-input-MuiOutlinedInput-input:invalid {
+    box-shadow: none;
+    padding-right: 50px !important;
+}
+
+label[data-shrink=false]+.MuiInputBase-formControl .css-16wblaj-MuiInputBase-input-MuiOutlinedInput-input {
+    padding-right: 50px;
+}
+*/
