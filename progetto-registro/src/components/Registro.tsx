@@ -17,7 +17,9 @@ import { Button } from "@mui/material";
 
 export default function Registro({ menuItems }: ButtonAppBarProps) {
   //unisco i tipi Presenza Studente e Lezione
-  const [presenze, setPresenze] = useState<(Presenza & { nome: string; cognome: string; dataLezione: string })[]>([]);
+  const [presenze, setPresenze] = useState<
+    (Presenza & { nome: string; cognome: string; dataLezione: string })[]
+  >([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -28,28 +30,27 @@ export default function Registro({ menuItems }: ButtonAppBarProps) {
           fetch("http://localhost:8080/api/studenti"),
         ]);
 
-const lezioniData: Lezione[] = await lezioniRes.json();
-const elencoStudenti: { cf: string; nome: string; cognome: string }[] =
-  await studentiRes.json();
+        const lezioniData: Lezione[] = await lezioniRes.json();
+        const elencoStudenti: { cf: string; nome: string; cognome: string }[] =
+          await studentiRes.json();
 
-const row = lezioniData.flatMap((lezione) =>
-  lezione.studenti.map((presenzaStudente) => {
-    const datiStudente = elencoStudenti.find(
-      (studenteInfo) => studenteInfo.cf === presenzaStudente.cf
-    );
+        const row = lezioniData.flatMap((lezione) =>
+          lezione.studenti.map((presenzaStudente) => {
+            const datiStudente = elencoStudenti.find(
+              (studenteInfo) => studenteInfo.cf === presenzaStudente.cf
+            );
 
-    return {
-      cf: presenzaStudente.cf,
-      nome: datiStudente?.nome ?? "N/D",
-      cognome: datiStudente?.cognome ?? "N/D",
-      dataLezione: lezione.dataLezione,
-      ore: presenzaStudente.ore,
-    };
-  })
-);
+            return {
+              cf: presenzaStudente.cf,
+              nome: datiStudente?.nome ?? "N/D",
+              cognome: datiStudente?.cognome ?? "N/D",
+              dataLezione: lezione.dataLezione,
+              ore: presenzaStudente.ore,
+            };
+          })
+        );
 
-setPresenze(row);
-
+        setPresenze(row);
       } catch (error) {
         console.error("Errore nel fetch:", error);
       }
@@ -62,7 +63,7 @@ setPresenze(row);
     <Box>
       <ButtonAppBar menuItems={menuItems}></ButtonAppBar>
 
-      <Box >
+      <Box>
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="registro presenze">
             <TableHead>
@@ -79,7 +80,7 @@ setPresenze(row);
               {presenze.map((row) => (
                 <TableRow
                   key={row.cf + "-" + row.dataLezione}
-                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
                   <TableCell>{row.cf}</TableCell>
                   <TableCell align="right">{row.nome}</TableCell>
@@ -90,9 +91,7 @@ setPresenze(row);
                     <Button
                       variant="outlined"
                       size="small"
-                      onClick={() =>
-                        navigate("/nuova-presenza/" + row.cf)
-                      }
+                      onClick={() => navigate("/nuova-presenza/" + row.cf)}
                     >
                       Modifica Presenza
                     </Button>
