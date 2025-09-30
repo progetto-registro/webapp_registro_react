@@ -1,4 +1,5 @@
 import type { MenuItem } from '../../types/menu';
+import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from 'react';
 import {
   Container,
@@ -42,6 +43,8 @@ export default function NuovaPresenza({menuItems}: NuovaPresenzaProps){
 
   // Stato per loading
   const [loading, setLoading] = useState(true);
+
+  const navigate = useNavigate(); // <-- Add this line
 
   /* Funzione per caricare gli studenti dall'API */
   const caricaStudenti = async () => {
@@ -200,7 +203,7 @@ export default function NuovaPresenza({menuItems}: NuovaPresenzaProps){
           <Button variant="contained" color="primary" onClick={salvaPresenze}>
             Salva Presenze
           </Button>
-          <Button variant="outlined">
+          <Button variant="outlined" onClick={() => navigate("/studenti")}>
             Aggiungi Studente
           </Button>
           <Button variant="outlined" color="secondary">
