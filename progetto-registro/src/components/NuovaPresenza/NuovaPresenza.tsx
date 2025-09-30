@@ -1,5 +1,5 @@
 import type { MenuItem } from '../../types/menu';
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Container,
   Typography,
@@ -27,7 +27,7 @@ type NuovaPresenzaProps = {
   menuItems: MenuItem[];
 };
 
-const NuovaPresenza: React.FC<NuovaPresenzaProps> = ({ menuItems }) => {
+export default function NuovaPresenza({menuItems}: NuovaPresenzaProps){
   // Stato per la data selezionata (default: oggi)
   const [dataSelezionata, setDataSelezionata] = useState(dayjs());
   
@@ -47,7 +47,7 @@ const NuovaPresenza: React.FC<NuovaPresenzaProps> = ({ menuItems }) => {
   const caricaStudenti = async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/studenti');
+      const response = await fetch('http://localhost:8080/api/studenti');
       const data = await response.json();
       setStudenti(data);
       
@@ -68,7 +68,7 @@ const NuovaPresenza: React.FC<NuovaPresenzaProps> = ({ menuItems }) => {
   const cambioOreHandler = (cf: string, ore: number) => {
     setPresenze((prevPresenze) =>
       prevPresenze.map((presenza) =>
-        presenza.cf === cf ? { ...presenza, ore } : presenza
+        presenza.cf === cf ? { ...presenza, ore: ore } : presenza
       )
     );
   };
@@ -213,5 +213,3 @@ const NuovaPresenza: React.FC<NuovaPresenzaProps> = ({ menuItems }) => {
 );
 
 };
-
-export default NuovaPresenza;
