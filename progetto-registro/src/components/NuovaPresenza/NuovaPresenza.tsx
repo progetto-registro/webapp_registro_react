@@ -1,5 +1,6 @@
 import type { MenuItem } from '../../types/menu';
-import React, { useState, useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from 'react';
 import {
   Container,
   Typography,
@@ -27,7 +28,7 @@ type NuovaPresenzaProps = {
   menuItems: MenuItem[];
 };
 
-const NuovaPresenza: React.FC<NuovaPresenzaProps> = ({ menuItems }) => {
+export default function NuovaPresenza({menuItems}: NuovaPresenzaProps){
   // Stato per la data selezionata (default: oggi)
   const [dataSelezionata, setDataSelezionata] = useState(dayjs());
   
@@ -43,11 +44,13 @@ const NuovaPresenza: React.FC<NuovaPresenzaProps> = ({ menuItems }) => {
   // Stato per loading
   const [loading, setLoading] = useState(true);
 
+  const navigate = useNavigate(); // <-- Add this line
+
   /* Funzione per caricare gli studenti dall'API */
   const caricaStudenti = async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/studenti');
+      const response = await fetch('http://localhost:8080/api/studenti');
       const data = await response.json();
       setStudenti(data);
       
@@ -68,7 +71,7 @@ const NuovaPresenza: React.FC<NuovaPresenzaProps> = ({ menuItems }) => {
   const cambioOreHandler = (cf: string, ore: number) => {
     setPresenze((prevPresenze) =>
       prevPresenze.map((presenza) =>
-        presenza.cf === cf ? { ...presenza, ore } : presenza
+        presenza.cf === cf ? { ...presenza, ore: ore } : presenza
       )
     );
   };
@@ -200,7 +203,7 @@ const NuovaPresenza: React.FC<NuovaPresenzaProps> = ({ menuItems }) => {
           <Button variant="contained" color="primary" onClick={salvaPresenze}>
             Salva Presenze
           </Button>
-          <Button variant="outlined">
+          <Button variant="outlined" onClick={() => navigate("/studenti")}>
             Aggiungi Studente
           </Button>
           <Button variant="outlined" color="secondary">
@@ -213,5 +216,3 @@ const NuovaPresenza: React.FC<NuovaPresenzaProps> = ({ menuItems }) => {
 );
 
 };
-
-export default NuovaPresenza;
