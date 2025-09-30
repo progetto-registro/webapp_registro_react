@@ -65,20 +65,22 @@ export default function Registro({ menuItems }: ButtonAppBarProps) {
           await studentiRes.json();
 
         const row = lezioniData.flatMap((lezione) =>
-          lezione.studenti.map((presenzaStudente) => {
-            const datiStudente = elencoStudenti.find(
-              (studenteInfo) => studenteInfo.cf === presenzaStudente.cf
-            );
-
-            return {
-              cf: presenzaStudente.cf,
-              nome: datiStudente!.nome,
-              cognome: datiStudente!.cognome,
-              dataLezione: lezione.dataLezione,
-              ore: presenzaStudente.ore,
-            };
-          })
+        lezione.studenti.map((presenzaStudente) => {
+        const datiStudente = elencoStudenti.find(
+        (studenteInfo) => studenteInfo.cf === presenzaStudente.cf
         );
+
+        return {
+          idLezione: lezione.id, 
+          cf: presenzaStudente.cf,
+          nome: datiStudente!.nome,
+          cognome: datiStudente!.cognome,
+          dataLezione: lezione.dataLezione,
+          ore: presenzaStudente.ore,
+        };
+        })
+        );
+
 
         setPresenze(row);
         console.log("presenze caricate : ", row);
@@ -92,39 +94,44 @@ export default function Registro({ menuItems }: ButtonAppBarProps) {
   }, []);
 
   const handleUpdateOre = useCallback(async () => {
-    if (!editingPresenza) return;
+  if (!editingPresenza) return;
 
-    try {
-      const response = await fetch("/api/lezioni/modifica", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({
-          cf: editingPresenza.cf,
-          dataLezione: editingPresenza.dataLezione,
-          ore: newOre,
-        }),
-      });
+  try {
+    const response = await fetch("/api/lezioni/modifica", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({
+        id: editingPresenza.idLezione, // devi avere l'id della lezione
+        dataLezione: editingPresenza.dataLezione,
+        studenti: [
+          {
+            cf: editingPresenza.cf,
+            ore: newOre
+          }
+        ]
+      }),
+    });
 
-      if (!response.ok) throw new Error("Errore nella modifica");
+    if (!response.ok) throw new Error("Errore nella modifica");
 
-      // Aggiorna stato locale
-      setPresenze((prev) =>
-        prev.map((p) =>
-          p.cf === editingPresenza.cf && p.dataLezione === editingPresenza.dataLezione
-            ? { ...p, ore: newOre }
-            : p
-        )
-      );
+    setPresenze((prev) =>
+      prev.map((p) =>
+        p.cf === editingPresenza.cf && p.dataLezione === editingPresenza.dataLezione
+          ? { ...p, ore: newOre }
+          : p
+      )
+    );
 
-      setOpen(false);
-      setEditingPresenza(null);
-      toast.success("Ore aggiornate con successo!");
-    } catch (error) {
-      console.error(error);
-      toast.error("Impossibile modificare le ore");
-    }
-  }, [editingPresenza, newOre]);
+    setOpen(false);
+    setEditingPresenza(null);
+    toast.success("Ore aggiornate con successo!");
+  } catch (error) {
+    console.error(error);
+    toast.error("Impossibile modificare le ore");
+  }
+}, [editingPresenza, newOre]);
+
 
   return (
     <Box>
