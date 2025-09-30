@@ -23,12 +23,23 @@ export default function Registro({ menuItems }: ButtonAppBarProps) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    async function fetchData() {
+    const fetchData = async () => {
       try {
         const [lezioniRes, studentiRes] = await Promise.all([
-          fetch("http://localhost:8080/api/lezioni"),
-          fetch("http://localhost:8080/api/studenti"),
+          fetch("/api/lezioni", {
+            credentials: "include",
+          }),
+          fetch("/api/studenti", {
+            credentials: "include",
+          }),
         ]);
+
+        if (!lezioniRes.ok) {
+          throw new Error("Errore nel fetch delle lezioni");
+        }
+        if (!studentiRes.ok) {
+          throw new Error("Errore nel fetch degli studenti");
+        }
 
         const lezioniData: Lezione[] = await lezioniRes.json();
         const elencoStudenti: { cf: string; nome: string; cognome: string }[] =
@@ -42,8 +53,8 @@ export default function Registro({ menuItems }: ButtonAppBarProps) {
 
             return {
               cf: presenzaStudente.cf,
-              nome: datiStudente?.nome ?? "N/D",
-              cognome: datiStudente?.cognome ?? "N/D",
+              nome: datiStudente?.nome,
+              cognome: datiStudente?.cognome,
               dataLezione: lezione.dataLezione,
               ore: presenzaStudente.ore,
             };
@@ -51,10 +62,12 @@ export default function Registro({ menuItems }: ButtonAppBarProps) {
         );
 
         setPresenze(row);
+        console.log("presenze caricate : ", row);
       } catch (error) {
         console.error("Errore nel fetch:", error);
+        alert("Errore nel caricamento dei dati");
       }
-    }
+    };
 
     fetchData();
   }, []);
