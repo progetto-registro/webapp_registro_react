@@ -4,7 +4,7 @@ import { Home } from "./components/Home";
 import SignUp from "./components/SignUp";
 import Login from "./components/Login/Login";
 import "./App.css";
-import { Profile } from "./components/Profile";
+import { Profile } from "./components/Profilo/Profile";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import FormatListBulletedAddIcon from "@mui/icons-material/FormatListBulletedAdd";
 import AppRegistrationIcon from "@mui/icons-material/AppRegistration";
@@ -15,6 +15,7 @@ import type { MenuItem } from "./types/menu";
 import Registro from "./components/Registro/Registro";
 import { Studenti } from "./components/Studenti/Studenti";
 import NuovaPresenza from "./components/NuovaPresenza/NuovaPresenza";
+import { NuovoStudente } from "./components/Studenti/NuovoStudente";
 
 function App() {
   const menuItems: MenuItem[] = [
@@ -52,6 +53,10 @@ function App() {
         <Route path="/profilo" element={<Profile menuItems={menuItems} />} />
         <Route path="/registro" element={<Registro menuItems={menuItems} />} />
         <Route path="/studenti" element={<Studenti menuItems={menuItems} />} />
+        <Route
+          path="/nuovo-studente"
+          element={<NuovoStudente menuItems={menuItems} />}
+        />
         <Route
           path="/nuova-presenza"
           element={<NuovaPresenza menuItems={menuItems} />}
