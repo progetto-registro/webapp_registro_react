@@ -19,6 +19,7 @@ import ButtonAppBar from "../ButtonAppBar";
 import { toast } from "react-toastify";
 import dayjs from "dayjs";
 import type { Studente } from "../../types/studente";
+import type { Lezione } from "../../types/presenza";
 
 type NuovaPresenzaProps = {
   menuItems: MenuItem[];
@@ -31,7 +32,7 @@ export default function NuovaPresenza({ menuItems }: NuovaPresenzaProps) {
   const [orePresenza, setOrePresenza] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(true);
 
-  const dataOggi = dayjs().format("DD-MM-YYYY");
+  const dataOggi = dayjs().format("DD/MM/YYYY");
 
   // Carico studenti
   useEffect(() => {
@@ -61,8 +62,9 @@ export default function NuovaPresenza({ menuItems }: NuovaPresenzaProps) {
   };
 
  const handleSalva = async () => {
-  const payload = {
-    dataLezione: dayjs().format("DD/MM/YYYY"), // formato come nel JSON
+  const nuovaLezione: Lezione = {
+    id: dayjs().valueOf(), // ID univoco in millisecondi
+    dataLezione: dayjs().format("DD/MM/YYYY"), // formato corretto
     studenti: studenti.map((s) => ({
       cf: s.cf,
       ore: orePresenza[s.cf] || 0,
@@ -70,21 +72,23 @@ export default function NuovaPresenza({ menuItems }: NuovaPresenzaProps) {
   };
 
   try {
-    const res = await fetch("/api/lezioni", {
-      method: "PUT",
+    const res = await fetch("/api/lezioni/nuova", {
+      method: "PUT", 
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
+      credentials: "include",
+      body: JSON.stringify(nuovaLezione),
     });
 
     if (!res.ok) throw new Error("Errore salvataggio");
 
-    toast.success("Presenze salvate in lezioni.json!");
+    toast.success("Nuova lezione salvata!");
     navigate("/registro");
   } catch (err) {
     console.error(err);
     toast.error("Errore nel salvataggio");
   }
 };
+
 
 
   if (loading) return <Typography>Caricamento...</Typography>;
