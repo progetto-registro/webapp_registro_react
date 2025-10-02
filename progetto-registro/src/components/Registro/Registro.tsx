@@ -150,7 +150,7 @@ export default function Registro({ menuItems }: ButtonAppBarProps) {
       <ButtonAppBar menuItems={menuItems}></ButtonAppBar>
 
       <Box sx={{ pt: 6 }}>
-        <TableContainer component={Paper}>
+        <TableContainer component={Paper} sx={{ boxShadow: '0 4px 8px rgba(0, 0, 0, 0.5)' }}>
           <Table sx={{ minWidth: 650 }} aria-label="registro presenze">
             <TableHead>
               <TableRow>

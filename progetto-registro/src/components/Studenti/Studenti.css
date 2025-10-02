@@ -1,14 +1,14 @@
-
 .studenti-container {
   padding: 20px;
   max-width: 1200px;
-  margin: 0 auto;
+  margin: 0 auto; 
 }
 
 .studenti-container table {
   width: 100%;
   border-collapse: collapse;
   table-layout: auto;
+  border: 0.1px solid rgb(187, 187, 187);
 }
 
 .studenti-container th,

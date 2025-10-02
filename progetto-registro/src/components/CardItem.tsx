@@ -9,10 +9,10 @@ export default function CardItem({ text, icon, path }: MenuItem) {
     <Card sx={{ 
       width: 200, 
       margin: 2,
-      boxShadow: 3,
+      boxShadow: 6,
       transition: '0.3s',
       '&:hover': {                   
-      boxShadow: 12,
+      boxShadow: 6,
       transform: 'scale(1.03)', }
       }}>
       <CardActionArea onClick={() => navigate(path)}>

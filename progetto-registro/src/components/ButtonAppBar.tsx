@@ -55,7 +55,13 @@ export default function ButtonAppBar({ menuItems }: ButtonAppBarProps) {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          <Typography variant="h4" component="div" 
+          sx={{ 
+            flexGrow: 1, 
+            fontWeight: 'bold',
+            alignItems: 'center',
+            paddingRight: 8
+            }}>
             Registrum
           </Typography>
         </Toolbar>

@@ -2,7 +2,6 @@ import type { MenuItem } from "../../types/menu";
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import {
@@ -115,7 +114,12 @@ export default function NuovaPresenza({ menuItems }: NuovaPresenzaProps) {
   />
 </LocalizationProvider>
 
-        <TableContainer component={Paper} sx={{ mt: 3 }}>
+        <TableContainer component={Paper} 
+        sx={{ 
+          mt: 3, 
+          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.5)', 
+          border: '1px solid rgb(187, 187, 187)'
+          }}>
           <Table>
             <TableHead>
               <TableRow>
@@ -154,7 +158,7 @@ export default function NuovaPresenza({ menuItems }: NuovaPresenzaProps) {
           </Table>
         </TableContainer>
 
-        <Box sx={{ mt: 3, display: "flex", gap: 2 }}>
+        <Box sx={{ mt: 3, display: "flex", gap: 2}}>
           <Button variant="contained" onClick={handleSalva}>
             Salva Presenze
           </Button>
