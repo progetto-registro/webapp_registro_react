@@ -151,7 +151,7 @@ export default function Registro({ menuItems }: ButtonAppBarProps) {
     <Box>
       <ButtonAppBar menuItems={menuItems}></ButtonAppBar>
 
-      <Box>
+      <Box sx={{ pt: 2 }}>
         <TableContainer component={Paper} 
         sx={{ 
           boxShadow: '0 4px 8px rgba(0, 0, 0, 0.5)', 
@@ -178,7 +178,7 @@ export default function Registro({ menuItems }: ButtonAppBarProps) {
                   <TableCell align="right">{row.nome}</TableCell>
                   <TableCell align="right">{row.cognome}</TableCell>
                   <TableCell align="right">{row.dataLezione}</TableCell>
-                  <TableCell align="right">{row.ore}</TableCell>
+                  <TableCell align="center">{row.ore}</TableCell>
                   {/*Colonna con colorazione*/}
                   <TableCell
                   align="right"
