@@ -85,6 +85,8 @@ export default function Registro({ menuItems }: ButtonAppBarProps) {
         })
         );
 
+        //più recenti in alto
+        row.sort((a, b) => b.idLezione - a.idLezione);
 
         setPresenze(row);
         console.log("presenze caricate : ", row);
