@@ -11,6 +11,7 @@ import AppRegistrationIcon from "@mui/icons-material/AppRegistration";
 import EditCalendarIcon from "@mui/icons-material/EditCalendar";
 import LogoutIcon from "@mui/icons-material/Logout";
 import HomeFilledIcon from "@mui/icons-material/HomeFilled";
+import PathProtected from "./components/PathProtected";
 import type { MenuItem } from "./types/menu";
 import Registro from "./components/Registro";
 import { Studenti } from "./components/Studenti/Studenti";
@@ -45,18 +46,20 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        {/* Route pubbliche */}
         <Route path="/" element={<StartingPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
-        <Route path="/home" element={<Home menuItems={menuItems} />} />
-        <Route path="/profilo" element={<Profile menuItems={menuItems} />} />
-        <Route path="/registro" element={<Registro menuItems={menuItems} />} />
-        <Route path="/studenti" element={<Studenti menuItems={menuItems} />} />
-        <Route
-          path="/nuova-presenza"
-          element={<NuovaPresenza menuItems={menuItems} />}
-        />
-      </Routes>
+
+        {/* Route protette */}
+        <Route path="/" element={<Home menuItems={menuItems} />}>
+          <Route path="home" element={<Home menuItems={menuItems} />} />
+          <Route path="profilo" element={<Profile menuItems={menuItems} />} />
+          <Route path="studenti" element={<Studenti menuItems={menuItems} />} />
+          <Route path="registro" element={<Registro menuItems={menuItems} />} />
+          <Route path="nuova-presenza" element={<NuovaPresenza menuItems={menuItems} />} />
+        </Route>
+</Routes>
     </BrowserRouter>
   );
 }
