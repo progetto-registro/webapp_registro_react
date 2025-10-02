@@ -6,9 +6,21 @@ export default function CardItem({ text, icon, path }: MenuItem) {
   const navigate = useNavigate();
 
   return (
-    <Card sx={{ width: 200, margin: 2 }}>
+    <Card sx={{ 
+      width: 200, 
+      margin: 2,
+      boxShadow: 3,
+      transition: '0.3s',
+      '&:hover': {                   
+      boxShadow: 12,
+      transform: 'scale(1.03)', }
+      }}>
       <CardActionArea onClick={() => navigate(path)}>
-        <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <CardContent sx={{ 
+          display: 'flex', 
+          flexDirection: 'column', 
+          alignItems: 'center',
+        }}>
           {icon}
           <Typography variant="h6" sx={{ mt: 1 }}>
             {text}
