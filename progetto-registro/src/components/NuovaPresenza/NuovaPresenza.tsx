@@ -107,18 +107,18 @@ export default function NuovaPresenza({ menuItems }: NuovaPresenzaProps) {
           Aggiungi Presenze
         </Typography>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-  <DateTimePicker
-    label="Data e ora lezione"
-    value={dataLezione}
-    onChange={(newValue) => setDataLezione(newValue)}
-  />
-</LocalizationProvider>
+        <DateTimePicker
+          label="Data e ora lezione"
+          value={dataLezione}
+          onChange={(newValue) => setDataLezione(newValue)}
+        />
+      </LocalizationProvider>
 
         <TableContainer component={Paper} 
         sx={{ 
           mt: 3, 
           boxShadow: '0 4px 8px rgba(0, 0, 0, 0.5)', 
-          border: '1px solid rgb(187, 187, 187)'
+          border: '0.1px solid rgb(187, 187, 187)'
           }}>
           <Table>
             <TableHead>
