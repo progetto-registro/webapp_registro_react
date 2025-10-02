@@ -17,15 +17,15 @@ import type { Utente } from "../../types/utente";
 import { useNavigate } from "react-router-dom";
 
 export function Profile({ menuItems }: ButtonAppBarProps) {
-  //trovare un modo per avere l'utente
+  //
   const initialUser: Utente = {
-    nome: "Pippo",
-    cognome: "Baudo",
+    nome: "Anna",
+    cognome: "Berti",
     sesso: "M",
-    dataNascita: "07/06/1936",
-    cf: "BDAPPP36H07C351U",
-    mail: "pippobaudo@gmail.com",
-    password: "baudo",
+    dataNascita: "03/08/2004",
+    cf: "BRTNNA04M43D969T",
+    mail: "bertanna@gmail.com",
+    password: "Annaele2006!",
     confermaPassword: "",
   };
   const navigate = useNavigate();
@@ -87,7 +87,7 @@ export function Profile({ menuItems }: ButtonAppBarProps) {
       }
 
       notify.success("Profilo aggiornato con successo!");
-      //trovare un modo per far visualizzare il tostify poi navigate
+
       navigate("/home");
     } catch (err) {
       console.error("Errore nella modifica:", err);
@@ -103,7 +103,12 @@ export function Profile({ menuItems }: ButtonAppBarProps) {
           className="signup-container"
           onSubmit={handleSubmit}
         >
-          <Typography variant="h4" textAlign="center" fontWeight="bold" color='#213547'>
+          <Typography
+            variant="h4"
+            textAlign="center"
+            fontWeight="bold"
+            color="#213547"
+          >
             Modifica Profilo
           </Typography>
 
