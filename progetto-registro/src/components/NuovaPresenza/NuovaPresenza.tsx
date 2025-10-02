@@ -103,7 +103,7 @@ export default function NuovaPresenza({ menuItems }: NuovaPresenzaProps) {
       <ButtonAppBar menuItems={menuItems} />
 
       <Container maxWidth="lg">
-        <Typography variant="h4" component="h1" gutterBottom>
+        <Typography variant="h4" component="h1" gutterBottom mb={3}>
           Aggiungi Presenze
         </Typography>
       <LocalizationProvider dateAdapter={AdapterDayjs}>

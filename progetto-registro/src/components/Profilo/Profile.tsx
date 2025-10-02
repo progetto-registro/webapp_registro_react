@@ -103,7 +103,7 @@ export function Profile({ menuItems }: ButtonAppBarProps) {
           className="signup-container"
           onSubmit={handleSubmit}
         >
-          <Typography variant="h4" textAlign="center" fontWeight="bold">
+          <Typography variant="h4" textAlign="center" fontWeight="bold" color='#213547'>
             Modifica Profilo
           </Typography>
 

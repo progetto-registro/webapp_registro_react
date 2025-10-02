@@ -144,7 +144,7 @@ export default function SignUp() {
           component="form"
           onSubmit={handleSubmit}
         >
-          <Typography variant="h4" textAlign="center" fontWeight={"bold"}>
+          <Typography variant="h4" textAlign="center" fontWeight="bold" color='#213547'>
             Registrazione
           </Typography>
 

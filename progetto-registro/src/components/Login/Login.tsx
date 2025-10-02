@@ -95,7 +95,7 @@ const submitLogin = async () => {
     <Box className="login-page">
       <Paper elevation={0} className="login-paper">
         <Box className="login-container">
-          <Typography variant='h4' textAlign='center' fontWeight="bold">
+          <Typography variant='h4' textAlign='center' fontWeight="bold" color='#213547'>
             Benvenuto
           </Typography>
 
