@@ -16,6 +16,7 @@ import Registro from "./components/Registro/Registro";
 import { Studenti } from "./components/Studenti/Studenti";
 import NuovaPresenza from "./components/NuovaPresenza/NuovaPresenza";
 import { NuovoStudente } from "./components/Studenti/NuovoStudente";
+import { ProtectedLayout } from "./components/ProtectedLayout";
 
 function App() {
   const menuItems: MenuItem[] = [
@@ -46,21 +47,21 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<StartingPage />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/home" element={<Home menuItems={menuItems} />} />
-        <Route path="/profilo" element={<Profile menuItems={menuItems} />} />
-        <Route path="/registro" element={<Registro menuItems={menuItems} />} />
-        <Route path="/studenti" element={<Studenti menuItems={menuItems} />} />
-        <Route
-          path="/nuovo-studente"
-          element={<NuovoStudente menuItems={menuItems} />}
-        />
-        <Route
-          path="/nuova-presenza"
-          element={<NuovaPresenza menuItems={menuItems} />}
-        />
+
+         
+          <Route path="/" element={<StartingPage />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<SignUp />} />
+
+          <Route element={<ProtectedLayout menuItems={menuItems} />}>
+          <Route path="/home" element={<Home menuItems={menuItems} />} />
+          <Route path="/profilo" element={<Profile menuItems={menuItems} />} />
+          <Route path="/studenti" element={<Studenti menuItems={menuItems} />} />
+          <Route path="/nuovo-studente" element={<NuovoStudente menuItems={menuItems} />} />
+          <Route path="/registro" element={<Registro menuItems={menuItems} />} />
+          <Route path="/nuova-presenza" element={<NuovaPresenza menuItems={menuItems} />} />
+          </Route>
+
       </Routes>
     </BrowserRouter>
   );
