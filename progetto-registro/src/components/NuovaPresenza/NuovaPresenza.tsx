@@ -1,4 +1,8 @@
 import type { MenuItem } from "../../types/menu";
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import {
@@ -26,6 +30,8 @@ type NuovaPresenzaProps = {
 };
 
 export default function NuovaPresenza({ menuItems }: NuovaPresenzaProps) {
+  const [dataLezione, setDataLezione] = useState<dayjs.Dayjs | null>(dayjs());
+
   const navigate = useNavigate();
 
   const [studenti, setStudenti] = useState<Studente[]>([]);
@@ -63,8 +69,8 @@ export default function NuovaPresenza({ menuItems }: NuovaPresenzaProps) {
 
  const handleSalva = async () => {
   const nuovaLezione: Lezione = {
-    id: dayjs().valueOf(), // ID univoco in millisecondi
-    dataLezione: dayjs().format("DD/MM/YYYY"), // formato corretto
+    id: (dataLezione ?? dayjs()).valueOf(),
+    dataLezione: (dataLezione ?? dayjs()).format("DD/MM/YYYY"),
     studenti: studenti.map((s) => ({
       cf: s.cf,
       ore: orePresenza[s.cf] || 0,
@@ -99,9 +105,15 @@ export default function NuovaPresenza({ menuItems }: NuovaPresenzaProps) {
 
       <Container maxWidth="lg">
         <Typography variant="h4" component="h1" gutterBottom>
-          Pagina per aggiungere presenze degli studenti per la lezione odierna
-          ({dataOggi})
+          Aggiungi Presenze
         </Typography>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+  <DateTimePicker
+    label="Data e ora lezione"
+    value={dataLezione}
+    onChange={(newValue) => setDataLezione(newValue)}
+  />
+</LocalizationProvider>
 
         <TableContainer component={Paper} sx={{ mt: 3 }}>
           <Table>
