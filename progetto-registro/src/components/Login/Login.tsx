@@ -32,14 +32,7 @@ const submitLogin = async () => {
         isLoading: false,
         autoClose: 3000
       }); 
-      
-      if(response.status === 200)
-        {
-          setTimeout(() => {
-            navigate("/home"); 
-          }, 2000);
-          
-        }
+      navigate("/home");
     }  
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
