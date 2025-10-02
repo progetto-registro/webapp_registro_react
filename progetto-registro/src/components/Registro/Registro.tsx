@@ -19,26 +19,25 @@ import {
   Dialog,
   DialogContent,
   TextField,
-  DialogActions
+  DialogActions,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import { useCallback } from "react";
 import { ToastContainer, toast } from 'react-toastify';
 
-
 export default function Registro({ menuItems }: ButtonAppBarProps) {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [presenze, setPresenze] = useState<PresenzaEstesa[]>([]);
   const [editingPresenza, setEditingPresenza] = useState<PresenzaEstesa | null>(null);
-
   const [newOre, setNewOre] = useState<number>(0);
 
   const notify = {
   error: (msg: string) => toast.error(msg),
   success: (msg: string) => toast.success(msg),
   };
+
 
   const handleOpenDialog = (presenza: PresenzaEstesa) => {
     setEditingPresenza(presenza);
@@ -102,7 +101,7 @@ export default function Registro({ menuItems }: ButtonAppBarProps) {
   if (!editingPresenza) return;
 
   //controllo 
-  if(!Number.isInteger(newOre) || newOre <= 0 || newOre > 8) {
+  if(!Number.isInteger(newOre) || newOre < 0 || newOre > 8) {
     notify.error("Non valido");
     return;
   }
@@ -138,7 +137,7 @@ export default function Registro({ menuItems }: ButtonAppBarProps) {
     setEditingPresenza(null);
 
     notify.success("Ore aggiornate con successo!");
-    alert("Ore modificate!");
+    
   } catch (error) {
     console.error(error);
     notify.error("Impossibile modificare le ore");
@@ -150,17 +149,17 @@ export default function Registro({ menuItems }: ButtonAppBarProps) {
     <Box>
       <ButtonAppBar menuItems={menuItems}></ButtonAppBar>
 
-      <Box>
+      <Box sx={{ pt: 6 }}>
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="registro presenze">
             <TableHead>
               <TableRow>
-                <TableCell>Codice Fiscale</TableCell>
                 <TableCell align="right">Nome</TableCell>
                 <TableCell align="right">Cognome</TableCell>
                 <TableCell align="right">Data Lezione</TableCell>
-                <TableCell align="right">Ore Presenza</TableCell>
-                <TableCell align="right">Azioni</TableCell>
+                <TableCell align="right">Ore Presenza </TableCell>
+                <TableCell align="right">Stato</TableCell>
+                <TableCell align="right">Modifica</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -169,17 +168,25 @@ export default function Registro({ menuItems }: ButtonAppBarProps) {
                   key={row.cf + "-" + row.dataLezione}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
-                  <TableCell>{row.cf}</TableCell>
+                  
                   <TableCell align="right">{row.nome}</TableCell>
                   <TableCell align="right">{row.cognome}</TableCell>
                   <TableCell align="right">{row.dataLezione}</TableCell>
                   <TableCell align="right">{row.ore}</TableCell>
+                  {/*Colonna con colorazione*/}
+                  <TableCell
+                  align="right"
+                  sx={{
+                  bgcolor: row.ore >= 1 && row.ore <= 8 ? "rgba(2, 208, 88, 0.4)" : "rgba(242, 72, 60, 0.4)",
+                  }}>
+                  {row.ore >= 1 && row.ore <= 8 ? "Presente":"Assente"}
+                  </TableCell>
                   <TableCell align="right">
                     <IconButton
-                    color="primary"
-                    onClick={() => handleOpenDialog(row)}
-                  >
-                    <EditIcon />
+                      color="info"
+                      onClick={() => handleOpenDialog(row)}
+                    >
+                      <EditIcon />
                   </IconButton>
                   </TableCell>
                 </TableRow>
@@ -190,7 +197,7 @@ export default function Registro({ menuItems }: ButtonAppBarProps) {
 
         
       </Box>
-      {/* Dialog per modificare ore */}
+      {/*Dialog per modificare ore */}
       <Dialog open={open} onClose={() => setOpen(false)}>
         <DialogTitle>Modifica ore</DialogTitle>
         <DialogContent>
@@ -199,14 +206,14 @@ export default function Registro({ menuItems }: ButtonAppBarProps) {
             type="number"
             fullWidth
             margin="dense"
-            value={newOre}
+            value={newOre === 0 ? "" : newOre} // mostra vuoto invece di 0
             onChange={(e) => setNewOre(Number(e.target.value))}
             inputProps={{ min: 0 }}
           />
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpen(false)}>Annulla</Button>
-          <Button onClick={handleUpdateOre} variant="contained" color="primary" disabled={!Number.isInteger(newOre) || newOre <= 0 || newOre >8}>
+          <Button onClick={handleUpdateOre} variant="contained" color="primary" disabled={!Number.isInteger(newOre) || newOre < 0 || newOre >8}>
             Salva
           </Button>
         </DialogActions>
