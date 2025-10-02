@@ -4,18 +4,18 @@ import { Home } from "./components/Home";
 import SignUp from "./components/SignUp";
 import Login from "./components/Login/Login";
 import "./App.css";
-import { Profile } from "./components/Profile";
+import { Profile } from "./components/Profilo/Profile";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import FormatListBulletedAddIcon from "@mui/icons-material/FormatListBulletedAdd";
 import AppRegistrationIcon from "@mui/icons-material/AppRegistration";
 import EditCalendarIcon from "@mui/icons-material/EditCalendar";
 import LogoutIcon from "@mui/icons-material/Logout";
 import HomeFilledIcon from "@mui/icons-material/HomeFilled";
-import PathProtected from "./components/PathProtected";
 import type { MenuItem } from "./types/menu";
-import Registro from "./components/Registro";
+import Registro from "./components/Registro/Registro";
 import { Studenti } from "./components/Studenti/Studenti";
 import NuovaPresenza from "./components/NuovaPresenza/NuovaPresenza";
+import { NuovoStudente } from "./components/Studenti/NuovoStudente";
 
 function App() {
   const menuItems: MenuItem[] = [

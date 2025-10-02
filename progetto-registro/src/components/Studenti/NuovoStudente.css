@@ -1,10 +1,12 @@
+
 .back-button-container {
     position: absolute;
     top: 10px;
     left: 10px;
     margin-top: 10px;
 }
-.signup-container {
+
+.studente-container {
     background-color: white;
     color: black;
     display: flex;
@@ -12,36 +14,39 @@
     align-items: center;
     justify-content: center;
     gap: 15px;
-    padding: 20px;
+    padding: 25px;
     border: 1px solid #ccc;
     border-radius: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
     overflow: hidden;
+    max-width: 500px;
+    margin: 40px auto;
 }
 
-.signup-paper {
+.studente-container .MuiPaper-root {
     background-color: transparent !important;
     box-shadow: none !important;
 }
 
-.signup-container input{
+.studente-container input,
+.studente-container .MuiSelect-select {
     width: 100% !important;
     min-width: 250px !important;
 }
 
-.signup-container button{
+.studente-container button {
     width: 100% !important;
 }
 
-.signup-container .MuiOutlinedInput-root input {
-    padding: 14px !important; /* riduce l'altezza del campo */
+.studente-container .MuiOutlinedInput-root input {
+    padding: 14px !important;
 }
 
-.signup-container .MuiOutlinedInput-root .MuiInputAdornment-root {
-    margin-right: -8px; /* avvicina l’icona all’input */
+.studente-container .MuiOutlinedInput-root .MuiInputAdornment-root {
+    margin-right: -8px;
 }
 
-.signup-container input[type="date"]::-webkit-calendar-picker-indicator {
+.studente-container input[type="date"]::-webkit-calendar-picker-indicator {
     filter: invert(0%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(0%) contrast(100%);
     cursor: pointer;
 }

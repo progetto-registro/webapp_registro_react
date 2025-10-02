@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { ToastContainer, toast } from 'react-toastify';
 import Button from '@mui/material/Button';
-import { Box, Link, TextField, Typography } from '@mui/material';
+import { Box, Link, Paper, TextField, Typography } from '@mui/material';
 import './Login.css';
 import axios from 'axios';
 import PasswordField from '../PasswordField';
@@ -48,7 +48,7 @@ const submitLogin = async () => {
         switch (err.response.status) {
           case 400:
             toast.update(toastLoad, {
-              render: "Username e/o password mancanti. Prova a registrarti se non l'hai ancora fatto",
+              render: (err.response.data),
               type: "error",
               isLoading: false,
               autoClose: 4000
@@ -56,7 +56,7 @@ const submitLogin = async () => {
             break;
           case 404:
             toast.update(toastLoad, {
-              render: (err.response.data),
+              render: "Username e/o password mancanti. Prova a registrarti se non l'hai ancora fatto",
               type: "error",
               isLoading: false,
               autoClose: 4000
@@ -100,63 +100,56 @@ const submitLogin = async () => {
 
   return (
     <Box className="login-page">
-      <Box className='back-button-container'>
-        <Button
-          variant="text" 
-          onClick={() => navigate(-1)} 
-        >
-          ← Indietro
-        </Button>
-      </Box>
+      <Paper elevation={0} className="login-paper">
+        <Box className="login-container">
+          <Typography variant='h4' textAlign='center' fontWeight="bold">
+            Benvenuto
+          </Typography>
 
-      <Box className="login-container">
-        <Typography variant='h4' textAlign='center' fontWeight="bold">
-          Benvenuto
-        </Typography>
+          <Box className="username-field">
+            <TextField 
+              label="Username"
+              placeholder='Username'
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              autoComplete="username"
+              required
+            />
+          </Box>
+        
+          <Box>
+            <PasswordField 
+              name="password"
+              label="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </Box>
 
-        <Box className="username-field">
-          <TextField 
-            label="Username"
-            placeholder='Username'
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            autoComplete="username"
-            required
-          />
-        </Box>
-      
-        <Box>
-          <PasswordField 
-            name="password"
-            label="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </Box>
-
-        <Button 
-          variant="contained" 
-          onClick={submitLogin} 
-          className="button"
-        >
-          Login
-        </Button>
-
-        <Box className="signup-link">
-          Non hai un account?
-          <Link
-          component="button"
-          variant="body2"
-          onClick={() => {
-            navigate("/signup");}}
+          <Button 
+            variant="contained" 
+            onClick={submitLogin} 
+            className="button"
           >
-          Registrati
-          </Link>
-        </Box>
+            Login
+          </Button>
 
-        <ToastContainer />
-      </Box>
+          <Box className="signup-link">
+            Non hai un account?
+            <Link
+            component="button"
+            variant="body2"
+            onClick={() => {
+              navigate("/signup");}}
+            >
+            Registrati!
+            </Link>
+          </Box>
+
+          <ToastContainer />
+        </Box>
+      </Paper>
     </Box>
   );
 }
