@@ -92,7 +92,7 @@ export default function Registro({ menuItems }: ButtonAppBarProps) {
         console.log("presenze caricate : ", row);
       } catch (error) {
         console.error("Errore nel fetch:", error);
-        alert("Errore nel caricamento dei dati");
+        notify.error("Errore nel caricamento dei dati");
       }
     };
 
